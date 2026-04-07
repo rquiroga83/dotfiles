@@ -426,23 +426,24 @@ blankwindow {
 /* Widget buttons-grid */
 .widget-buttons-grid flowboxchild > button {
   border-radius: 0;
-  background: #1a0000;
-  border: 1px solid #ff003c;
-  color: #ffcccc;
+  background: #2a1e00;
+  border: 1px solid #fcee0a;
+  color: #fcee0a;
   padding: 8px;
   margin: 4px;
+  font-weight: bold;
   transition: background 0.15s ease-in-out;
 }
 
 .widget-buttons-grid flowboxchild > button:hover {
-  background: #ff003c;
+  background: #fcee0a;
   color: #0a0000;
 }
 
 .widget-buttons-grid flowboxchild > button.toggle:checked {
-  background: #ff003c;
+  background: #fcee0a;
   color: #0a0000;
-  border-color: #660000;
+  border-color: #7a6e00;
 }
 
 /* Widget slider */
@@ -561,10 +562,58 @@ blankwindow {
   color: #00cfff;
 }
 
+.widget-volume scale trough {
+  background: #0a0000;
+  border: 1px solid #003a4d;
+  border-radius: 0;
+  min-height: 8px;
+}
+
+.widget-volume scale highlight {
+  background: #00cfff;
+  border-radius: 0;
+  min-height: 8px;
+}
+
+.widget-volume scale slider {
+  background: #00cfff;
+  border: 2px solid #0a0000;
+  border-radius: 0;
+  min-width: 14px;
+  min-height: 14px;
+}
+
+.widget-volume scale slider:hover {
+  background: #fcee0a;
+  border-color: #0a0000;
+}
+
 .per-app-volume {
   background-color: #1a0000;
   margin: 8px;
   margin-bottom: 0;
   border-radius: 0;
-  border: 1px solid #00cfff;
+  border: none;
+  border-bottom: 1px solid #003a4d;
+}
+
+.per-app-volume scale trough {
+  background: #0a0000;
+  border: 1px solid #003a4d;
+  border-radius: 0;
+  min-height: 6px;
+}
+
+.per-app-volume scale highlight {
+  background: #00cfff;
+  border-radius: 0;
+  min-height: 6px;
+}
+
+.per-app-volume scale slider {
+  background: #00cfff;
+  border: 2px solid #0a0000;
+  border-radius: 0;
+  min-width: 12px;
+  min-height: 12px;
 }
