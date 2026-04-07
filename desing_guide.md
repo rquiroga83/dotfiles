@@ -15,7 +15,8 @@ Guía de referencia para replicar el estilo visual de la waybar en otros compone
 | Acento rojo oscuro   | `--red-dark`     | `#660000` | Estados críticos, sombras                |
 | Amarillo neón        | `--yellow`       | `#fcee0a` | Launcher, red, batería, disco, brillo    |
 | Amarillo apagado     | `--yellow-dim`   | `#7a6e00` | Estado inactivo del amarillo (animación) |
-| Azul neón            | `--cyan`         | `#00cfff` | Bluetooth, audio, temperatura, CPU, cava |
+| Azul neón            | `--cyan`         | `#00cfff` | Bluetooth, audio, temperatura, CPU, cava, botones de acción |
+| Azul apagado         | `--cyan-dim`     | `#003a4d` | Fondo de botones de acción cyan (contraste con texto neón)  |
 | Texto suave          | `--text-soft`    | `#ffcccc` | Texto en tooltips y menús                |
 | Negro puro           | `--black`        | `#0a0000` | Texto sobre fondos de acento             |
 
@@ -143,6 +144,7 @@ animation-direction: alternate;
 | Hover / foco  | `#ff003c`  | `#0a0000` (invertido) |
 | Crítico       | `#ff003c`  | `#0a0000`  |
 | Deshabilitado | `#3a0000`  | `#660000`  |
+| Acción cyan   | `#003a4d`  | `#00cfff` (hover: fondo `#00cfff`, texto `#0a0000`) |
 
 ---
 
@@ -219,6 +221,36 @@ general {
 }
 ```
 
+### SwayNC (notificaciones)
+
+```css
+/* Control center: sin borde exterior, esquina cortada */
+.control-center {
+  border: none;
+  background:
+    linear-gradient(135deg, transparent 10px, #0a0000 10px) top left  / 51% 100% no-repeat,
+    linear-gradient(225deg, transparent 10px, #0a0000 10px) top right / 51% 100% no-repeat;
+}
+
+/* Notificaciones: sin borde, esquina cortada 8px */
+.notification {
+  border: none;
+  background: linear-gradient(135deg, transparent 8px, #1a0000 8px);
+}
+
+/* Botón de acción (Clear All): azul neón sobre fondo cyan apagado */
+.widget-title > button {
+  background: #003a4d;   /* --cyan-dim */
+  color: #00cfff;        /* --cyan */
+  border: 1px solid #00cfff;
+  font-weight: bold;
+}
+.widget-title > button:hover {
+  background: #00cfff;
+  color: #0a0000;
+}
+```
+
 ---
 
 ## Jerarquía visual — resumen rápido
@@ -226,7 +258,8 @@ general {
 ```
 #ff003c  →  Lo más importante (reloj, bordes, alertas)
 #fcee0a  →  Información de uso (red, batería, disco)
-#00cfff  →  Métricas del sistema (CPU, temp, audio)
+#00cfff  →  Métricas del sistema (CPU, temp, audio, botones de acción)
+#003a4d  →  Fondo apagado de botones cyan (contraste neón)
 #ffcccc  →  Texto secundario (tooltips, menús)
 #1a0000  →  Superficie de módulo
 #0a0000  →  Fondo base

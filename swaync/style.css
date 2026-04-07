@@ -31,11 +31,9 @@ blankwindow {
 
 /* ── Centro de control ─────────────────────────────────────── */
 .control-center {
-  background: #0a0000;
   color: #ffcccc;
-  border: 1px solid #ff003c;
+  border: none;
   border-radius: 0;
-  /* esquina superior-izquierda cortada (10px como la barra) */
   background:
     linear-gradient(135deg, transparent 10px, #0a0000 10px) top left  / 51% 100% no-repeat,
     linear-gradient(225deg, transparent 10px, #0a0000 10px) top right / 51% 100% no-repeat;
@@ -64,28 +62,33 @@ blankwindow {
   padding: 5px 10px;
 }
 
-/* Notificación base — esquina cortada 8px */
+/* Notificación base — esquina cortada sup-izq, solo borde inferior brillante */
 .notification-row .notification-background .notification {
   background: linear-gradient(135deg, transparent 8px, #1a0000 8px);
-  border: 1px solid #ff003c;
+  border: none;
+  border-bottom: 1px solid #ff003c;
   border-radius: 0;
   padding: 0;
+  box-shadow: 0 4px 12px rgba(255, 0, 60, 0.5), 0 1px 0 #ff003c;
   transition: background 0.15s ease-in-out;
 }
 
 /* Urgencias */
 .notification-row .notification-background .notification.low {
-  border-color: #00cfff;
+  border-bottom-color: #00cfff;
+  box-shadow: 0 4px 12px rgba(0, 207, 255, 0.5), 0 1px 0 #00cfff;
   background: linear-gradient(135deg, transparent 8px, #0a0000 8px);
 }
 
 .notification-row .notification-background .notification.normal {
-  border-color: #fcee0a;
+  border-bottom-color: #fcee0a;
+  box-shadow: 0 4px 12px rgba(252, 238, 10, 0.5), 0 1px 0 #fcee0a;
   background: linear-gradient(135deg, transparent 8px, #1a0000 8px);
 }
 
 .notification-row .notification-background .notification.critical {
-  border-color: #660000;
+  border-bottom-color: #ff003c;
+  box-shadow: 0 4px 16px rgba(255, 0, 60, 0.8), 0 1px 0 #ff003c;
   background: linear-gradient(135deg, transparent 8px, #ff003c 8px);
   animation: blink-critical 0.5s linear infinite alternate;
 }
@@ -93,6 +96,7 @@ blankwindow {
 @keyframes blink-critical {
   to {
     background: linear-gradient(135deg, transparent 8px, #660000 8px);
+    box-shadow: 0 4px 8px rgba(255, 0, 60, 0.3), 0 1px 0 #660000;
   }
 }
 
@@ -323,7 +327,9 @@ blankwindow {
   padding: 10px;
   border-radius: 0;
   background: linear-gradient(135deg, transparent 8px, #1a0000 8px);
-  border: 1px solid #ff003c;
+  border: none;
+  border-bottom: 1px solid #ff003c;
+  box-shadow: 0 4px 12px rgba(255, 0, 60, 0.4), 0 1px 0 #ff003c;
   color: #ffcccc;
 }
 
@@ -338,15 +344,16 @@ blankwindow {
 .widget-title > button {
   margin-left: 8px;
   border-radius: 0;
-  background: #2b0000;
-  color: #fcee0a;
-  border: 1px solid #fcee0a;
+  background: #003a4d;
+  color: #00cfff;
+  border: 1px solid #00cfff;
   padding: 4px 10px;
+  font-weight: bold;
   transition: background 0.15s ease-in-out;
 }
 
 .widget-title > button:hover {
-  background: #fcee0a;
+  background: #00cfff;
   color: #0a0000;
 }
 
