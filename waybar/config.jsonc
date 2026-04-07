@@ -95,8 +95,8 @@
         "dynamic-len": 28,
         "tooltip-format": "{title}\n{artist}\n{album}",
         "status-icons": {
-                "playing": "▶",
-                "paused":  "⏸",
+                "playing": "⏸",
+                "paused":  "▶",
                 "stopped": "⏹"
         },
         "ignored-players": ["firefox"]
@@ -106,7 +106,7 @@
 	//  "cava_config": "$XDG_CONFIG_HOME/cava/cava.conf",
 		"framerate": 60,
 		"autosens": 0,
-		"sensitivity": 2,
+		"sensitivity": 1.5,
 		"bars": 16,
 		"lower_cutoff_freq": 40,
 		"higher_cutoff_freq": 16000,
