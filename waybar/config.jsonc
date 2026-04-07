@@ -17,7 +17,7 @@
   // ░█░█░█░█░█░█░█░█░█░░░█▀▀░▀▀█
   // ░▀░▀░▀▀▀░▀▀░░▀▀▀░▀▀▀░▀▀▀░▀▀▀
 
-  "modules-left": ["custom/launcher", "hyprland/workspaces"],
+  "modules-left": ["custom/launcher", "hyprland/workspaces", "mpris"],
   "modules-center": ["cpu","temperature","memory","disk"],
   "modules-right":["cava","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
 
@@ -86,13 +86,17 @@
   // ░▀▀▀░░▀░░▀▀▀░▀░▀░▀▀▀
 
    "mpris": {
-        "player" : "audacious",
+        "player": "spotify",
         "dynamic-order": ["title", "artist"],
-        "format": "{status_icon} <i>{dynamic}</i>",
-        "status-icons":{
-                "default": "▶" ,
-                "paused": "⏸" 
+        "format": "{status_icon}",
+        "dynamic-len": 28,
+        "tooltip-format": "{title}\n{artist}\n{album}",
+        "status-icons": {
+                "playing": "▶",
+                "paused":  "⏸",
+                "stopped": "⏹"
         },
+        "ignored-players": ["firefox"]
    },
 
   "cpu": {
@@ -130,13 +134,6 @@
         "interval": 30,
    },
 
-  "custom/nvidia": {
-	"tooltip": true,
-	"tooltip-format" : "󰍹 : ",
-    	"exec": "nvidia-smi --query-gpu=utilization.gpu,temperature.gpu --format=csv,nounits,noheader | sed 's/\\([0-9]\\+\\), \\([0-9]\\+\\)/\\1% 🌡️\\2°C/g'",
-    	"format": "󰍹 {} ",
-    	"interval": 2
-  },
 
  "cava": {
 	//  "cava_config": "$XDG_CONFIG_HOME/cava/cava.conf",
@@ -146,7 +143,7 @@
 		"bars": 16,
 		"lower_cutoff_freq": 40,
 		"higher_cutoff_freq": 16000,
-		"method": "pulse",
+		"method": "pipewire",
 		"source": "auto",
 		"stereo": false,
 		"reverse": false,
