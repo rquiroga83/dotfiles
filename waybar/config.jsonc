@@ -64,7 +64,9 @@
 		"4": [],
 		"5": [],
 		"6": [],
-	        "7": []
+	  "7": [],
+	  "8": [],
+	  "9": []
         },
         "format": "{icon}",
         "format-icons": {
@@ -132,7 +134,8 @@
         "format": "<span color='#19fc78'> </span> {usage}%",
         "tooltip": true,
         "tooltip-format": " CPU: {usage}%\nCore: {usage0}% | {usage1}% | {usage2}% | {usage3}%",
-        "max-length": 10
+        "max-length": 10,
+        "on-click": "kitty --class btop --title btop btop"
    },
 
   "temperature": {
