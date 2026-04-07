@@ -337,12 +337,14 @@ blankwindow {
   margin: 6px;
   padding: 10px;
   border-radius: 0;
+  
   background:
     linear-gradient(135deg, transparent 8px, #1a0000 8px) top    / 100% 51% no-repeat,
     linear-gradient(315deg, transparent 8px, #1a0000 8px) bottom / 100% 51% no-repeat;
+  
   border: none;
   border-bottom: 1px solid #ff003c;
-  box-shadow: 0 4px 12px rgba(255, 0, 60, 0.4), 0 1px 0 #ff003c;
+  /*box-shadow: 0 4px 12px rgba(255, 0, 60, 0.4), 0 1px 0 #ff003c;*/
   color: #ffcccc;
 }
 
