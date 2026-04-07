@@ -2,7 +2,11 @@
 
 Configuración de escritorio Linux con tema **Cyberpunk Red**: fondos negros profundos, bordes neon rojo, amarillo y cyan, esquinas cortadas en diagonal y tipografía monoespaciada.
 
-![Hyprland + Waybar](screenshots/)
+![Escritorio con wallpaper cyberpunk](screenshots/screen3.png)
+
+![VS Code con hyprland.conf y Waybar](screenshots/screen1.png)
+
+![Repositorio en GitHub con Firefox](screenshots/screen2.png)
 
 ---
 
