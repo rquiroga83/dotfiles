@@ -126,7 +126,7 @@ element-icon {
 element-text {
     background-color: transparent;
     text-color:       inherit;
-    highlight:        bold #ff003c;
+    highlight:        bold underline #fcee0a;
     vertical-align:   0.5;
 }
 
