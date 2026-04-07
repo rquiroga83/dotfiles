@@ -193,7 +193,7 @@
         "format-disabled": "<span color='#555555'>󰂲</span>",
         "format-off": "<span color='#555555'>󰂲</span>",
         "format-connected": "<span color='#7aa2f7'>󰂱</span> {num_connections}",
-        "on-click": "blueman-manager"
+        "on-click": "kitty --class btmenu --title btmenu ~/dotfiles/util/bluetooth/btmenu"
    },
 
    "network": {
