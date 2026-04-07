@@ -1,0 +1,473 @@
+#!/usr/bin/env python3
+"""btmenu — gestor interactivo de Bluetooth (Cyberpunk Red)"""
+
+import os
+import re
+import select
+import subprocess
+import sys
+import termios
+import threading
+import tty
+from time import sleep
+
+# ── Colores ───────────────────────────────────────────────────────────────────
+R   = '\033[38;2;255;0;60m'
+Y   = '\033[38;2;252;238;10m'
+C   = '\033[38;2;0;207;255m'
+G   = '\033[38;2;255;204;204m'
+B   = '\033[1m'
+RST = '\033[0m'
+
+HEADER = (
+    f"{R}{B}"
+    "  ██████╗ ██╗     ██╗   ██╗███████╗████████╗ ██████╗  ██████╗ ████████╗██╗  ██╗\n"
+    "  ██╔══██╗██║     ██║   ██║██╔════╝╚══██╔══╝██╔═══██╗██╔═══██╗╚══██╔══╝██║  ██║\n"
+    "  ██████╔╝██║     ██║   ██║█████╗     ██║   ██║   ██║██║   ██║   ██║   ███████║\n"
+    "  ██╔══██╗██║     ██║   ██║██╔══╝     ██║   ██║   ██║██║   ██║   ██║   ██╔══██║\n"
+    "  ██████╔╝███████╗╚██████╔╝███████╗   ██║   ╚██████╔╝╚██████╔╝   ██║   ██║  ██║\n"
+    "  ╚═════╝ ╚══════╝ ╚═════╝ ╚══════╝   ╚═╝    ╚═════╝  ╚═════╝    ╚═╝   ╚═╝  ╚═╝\n"
+    f"{RST}"
+)
+
+SPIN = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏']
+
+# ── Helpers de terminal ───────────────────────────────────────────────────────
+
+def clr():
+    os.system('clear')
+
+def cursor_hide():
+    sys.stdout.write('\033[?25l'); sys.stdout.flush()
+
+def cursor_show():
+    sys.stdout.write('\033[?25h'); sys.stdout.flush()
+
+def cursor_save():
+    sys.stdout.write('\033[s'); sys.stdout.flush()
+
+def cursor_restore():
+    sys.stdout.write('\033[u'); sys.stdout.flush()
+
+def erase_down():
+    sys.stdout.write('\033[J'); sys.stdout.flush()
+
+def getch(timeout=0.3):
+    """Lee un carácter sin bloquear; devuelve None si no hay input."""
+    fd = sys.stdin.fileno()
+    old = termios.tcgetattr(fd)
+    try:
+        tty.setraw(fd)
+        r, _, _ = select.select([sys.stdin], [], [], timeout)
+        if r:
+            ch = sys.stdin.read(1)
+            if ch == '\x1b':
+                select.select([sys.stdin], [], [], 0.05)
+                try:
+                    sys.stdin.read(2)
+                except Exception:
+                    pass
+            return ch
+        return None
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old)
+
+def pause(msg="Enter para continuar..."):
+    try:
+        input(f"\n  {R}{msg}{RST}")
+    except (KeyboardInterrupt, EOFError):
+        pass
+
+def pick_numbers(prompt, max_idx):
+    """
+    Pide uno o varios índices separados por espacio (ej: "1 3").
+    Devuelve lista de índices 0-based válidos, o [] si cancela.
+    """
+    try:
+        raw = input(f"  {R}{prompt}: {RST}").strip()
+    except (KeyboardInterrupt, EOFError):
+        return []
+    if not raw or raw == '0':
+        return []
+    indices = []
+    for tok in raw.split():
+        try:
+            n = int(tok)
+            if 1 <= n <= max_idx:
+                indices.append(n - 1)
+        except ValueError:
+            pass
+    return indices
+
+# ── Bluetooth helpers ─────────────────────────────────────────────────────────
+
+def bt_run(*args, timeout=6):
+    try:
+        r = subprocess.run(
+            ['bluetoothctl', '--', *args],
+            capture_output=True, text=True, timeout=timeout
+        )
+        return (r.stdout + r.stderr).strip()
+    except subprocess.TimeoutExpired:
+        return ""
+
+def bt_is_on():
+    out = subprocess.run(['bluetoothctl', 'show'],
+                         capture_output=True, text=True).stdout
+    return 'Powered: yes' in out
+
+def bt_status_line():
+    if bt_is_on():
+        return f"  {C}●{RST} Bluetooth: {C}{B}ENCENDIDO{RST}"
+    return f"  {R}●{RST} Bluetooth: {R}{B}APAGADO{RST}"
+
+def _parse_devices(raw):
+    devs = {}
+    for line in raw.splitlines():
+        m = re.match(r'Device\s+([0-9A-Fa-f:]{17})\s+(.*)', line)
+        if m:
+            devs[m.group(1)] = m.group(2).strip()
+    return devs
+
+def all_devices():
+    out = subprocess.run(['bluetoothctl', 'devices'],
+                         capture_output=True, text=True).stdout
+    return _parse_devices(out)
+
+def connected_devices():
+    out = subprocess.run(['bluetoothctl', 'devices', 'Connected'],
+                         capture_output=True, text=True).stdout
+    return _parse_devices(out)
+
+def paired_devices():
+    out = subprocess.run(['bluetoothctl', 'devices', 'Paired'],
+                         capture_output=True, text=True).stdout
+    return _parse_devices(out)
+
+def strip_ansi(s):
+    return re.sub(r'\x1b\[[0-9;]*[mGKHFJA-Za-z]', '', s)
+
+# ── Escaneo en background ─────────────────────────────────────────────────────
+
+def start_scan(devs: dict, order: list, stop: threading.Event):
+    def _worker():
+        try:
+            proc = subprocess.Popen(
+                ['bluetoothctl'],
+                stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT, text=True, bufsize=1
+            )
+            proc.stdin.write('agent on\ndefault-agent\nscan on\n')
+            proc.stdin.flush()
+
+            while not stop.is_set():
+                r, _, _ = select.select([proc.stdout], [], [], 0.2)
+                if not r:
+                    continue
+                line = proc.stdout.readline()
+                if not line:
+                    break
+                clean = strip_ansi(line).strip()
+
+                m = re.match(r'\[NEW\]\s+Device\s+([0-9A-Fa-f:]{17})\s+(.*)', clean)
+                if m:
+                    mac, name = m.group(1), m.group(2).strip()
+                    if mac not in devs:
+                        devs[mac] = name or mac
+                        order.append(mac)
+
+                m = re.match(r'\[CHG\]\s+Device\s+([0-9A-Fa-f:]{17})\s+Name:\s+(.*)', clean)
+                if m:
+                    mac, name = m.group(1), m.group(2).strip()
+                    if mac in devs and name:
+                        devs[mac] = name
+
+            try:
+                proc.stdin.write('scan off\n')
+                proc.stdin.flush()
+                proc.terminate()
+                proc.wait(timeout=2)
+            except Exception:
+                pass
+        except Exception:
+            pass
+
+    t = threading.Thread(target=_worker, daemon=True)
+    t.start()
+    return t
+
+# ── Visualización ─────────────────────────────────────────────────────────────
+
+def print_live_list(devs, order, spin_char, paired_macs=None, connected_macs=None):
+    paired_macs    = paired_macs    or set()
+    connected_macs = connected_macs or set()
+
+    if not order:
+        print(f"  {G}Buscando... {C}{spin_char}{RST}")
+        return
+
+    print(f"  {G}Encontrados: {C}{len(order)}{RST}  {spin_char}\n")
+    for mac in order:
+        name = devs.get(mac, mac)
+        tags = ''
+        if mac in connected_macs: tags += f" {C}[conectado]{RST}"
+        if mac in paired_macs:    tags += f" {Y}[pareado]{RST}"
+        print(f"  {G}{mac}{RST}  {Y}{name:<34}{RST}{tags}")
+
+def print_numbered_list(devs, order, paired_macs=None, connected_macs=None):
+    paired_macs    = paired_macs    or set()
+    connected_macs = connected_macs or set()
+    for i, mac in enumerate(order, 1):
+        name = devs.get(mac, mac)
+        tags = ''
+        if mac in connected_macs: tags += f" {C}[conectado]{RST}"
+        if mac in paired_macs:    tags += f" {Y}[pareado]{RST}"
+        print(f"  {C}[{i:2d}]{RST}  {G}{mac}{RST}  {Y}{name:<34}{RST}{tags}")
+
+# ── Acción: Conectar (pareados primero + escaneo opcional) ────────────────────
+#
+# Flujo:
+#   1. Muestra dispositivos ya pareados (conexión inmediata sin escanear)
+#   2. Opción [S] para lanzar escaneo en vivo y descubrir nuevos
+#   3. Selección múltiple en ambos casos
+
+def action_connect():
+    if not bt_is_on():
+        print(f"\n  {R}Bluetooth apagado. Actívalo primero con: bluetoothctl power on{RST}")
+        sleep(3); return
+
+    # ── Fase 1: pareados disponibles ──────────────────────────────────────
+    paired        = paired_devices()
+    connected_macs = set(connected_devices())
+    not_connected = {m: n for m, n in paired.items() if m not in connected_macs}
+
+    clr(); print(HEADER, end='')
+    print(f"  {C}{B}CONECTAR DISPOSITIVO{RST}\n")
+
+    if paired:
+        print(f"  {G}Dispositivos pareados:{RST}\n")
+        order = list(paired.keys())
+        print_numbered_list(paired, order, set(paired), connected_macs)
+        print()
+        if not_connected:
+            print(f"  {G}Número(s) para reconectar, {Y}S{G} para escanear nuevos, {Y}0{G} para cancelar{RST}")
+        else:
+            print(f"  {G}Todos ya conectados. {Y}S{G} para buscar nuevos, {Y}0{G} para cancelar{RST}")
+    else:
+        order = []
+        print(f"  {G}No hay dispositivos pareados. {Y}S{G} para escanear, {Y}0{G} para cancelar{RST}")
+
+    print()
+    try:
+        sel = input(f"  {R}> {RST}").strip()
+    except (KeyboardInterrupt, EOFError):
+        return
+
+    if not sel or sel == '0':
+        return
+
+    # ── Fase 1b: selección directa de un pareado ──────────────────────────
+    if sel.lower() != 's':
+        indices = []
+        for tok in sel.split():
+            try:
+                n = int(tok)
+                if 1 <= n <= len(order):
+                    indices.append(n - 1)
+            except ValueError:
+                pass
+        for idx in indices:
+            mac  = order[idx]
+            name = paired[mac]
+            if mac in connected_macs:
+                print(f"\n  {C}{name}{RST} ya está conectado.")
+                sleep(1)
+            else:
+                _do_connect(mac, name, already_paired=True)
+        return
+
+    # ── Fase 2: escaneo en vivo ───────────────────────────────────────────
+    devs  = all_devices()
+    scan_order = list(devs.keys())
+    stop  = threading.Event()
+    paired_macs = set(paired)
+    connected_macs = set(connected_devices())
+
+    start_scan(devs, scan_order, stop)
+
+    clr(); print(HEADER, end='')
+    print(f"  {C}{B}CONECTAR — ESCANEO EN VIVO{RST}")
+    print(f"  {G}Presiona {Y}Enter{G} para detener y seleccionar{RST}\n")
+    cursor_save()
+    cursor_hide()
+
+    si = 0
+    try:
+        while True:
+            cursor_restore(); erase_down()
+            print_live_list(devs, scan_order, SPIN[si], paired_macs, connected_macs)
+            si = (si + 1) % len(SPIN)
+            if getch() is not None:
+                break
+    except KeyboardInterrupt:
+        cursor_show(); stop.set(); return
+    finally:
+        cursor_show()
+        stop.set()
+
+    if not scan_order:
+        print(f"\n  {Y}No se encontraron dispositivos.{RST}")
+        sleep(2); return
+
+    paired_macs    = set(paired_devices())
+    connected_macs = set(connected_devices())
+
+    print(f"\n\n  {C}Selecciona dispositivo(s) — número(s) separados por espacio:{RST}\n")
+    print_numbered_list(devs, scan_order, paired_macs, connected_macs)
+    print()
+
+    indices = pick_numbers("Número(s) (0 = cancelar)", len(scan_order))
+    for idx in indices:
+        mac  = scan_order[idx]
+        name = devs.get(mac, mac)
+        _do_connect(mac, name, already_paired=(mac in paired_macs))
+
+# ── Acción: Desconectar ───────────────────────────────────────────────────────
+
+def action_disconnect():
+    if not bt_is_on():
+        print(f"\n  {R}Bluetooth apagado.{RST}"); sleep(2); return
+
+    connected = connected_devices()
+    if not connected:
+        print(f"\n  {G}Ningún dispositivo conectado.{RST}"); sleep(2); return
+
+    order = list(connected.keys())
+    print(f"\n  {C}Dispositivos conectados:{RST}\n")
+    print_numbered_list(connected, order, connected_macs=set(connected))
+    print()
+
+    indices = pick_numbers("Número(s) (0 = cancelar)", len(order))
+    if not indices:
+        return
+
+    for idx in indices:
+        mac  = order[idx]
+        name = connected[mac]
+        print(f"\n  {Y}Desconectando {C}{name}{RST}...")
+        out = bt_run('disconnect', mac, timeout=8)
+        if 'successful' in out.lower():
+            print(f"  {C}Desconectado.{RST}")
+        else:
+            print(f"  {G}{out}{RST}")
+    sleep(2)
+
+# ── Acción: Desemparejar ──────────────────────────────────────────────────────
+
+def action_unpair():
+    if not bt_is_on():
+        print(f"\n  {R}Bluetooth apagado.{RST}"); sleep(2); return
+
+    paired = paired_devices()
+    if not paired:
+        print(f"\n  {G}No hay dispositivos pareados.{RST}"); sleep(2); return
+
+    connected_macs = set(connected_devices())
+    order = list(paired.keys())
+
+    print(f"\n  {C}Dispositivos pareados:{RST}\n")
+    print_numbered_list(paired, order, set(paired), connected_macs)
+    print()
+
+    indices = pick_numbers("Número(s) (0 = cancelar)", len(order))
+    if not indices:
+        return
+
+    for idx in indices:
+        mac  = order[idx]
+        name = paired[mac]
+        print(f"\n  {Y}Desemparejando {C}{name}{RST}...")
+        bt_run('disconnect', mac, timeout=5)
+        out = bt_run('remove', mac, timeout=8)
+        if 'removed' in out.lower():
+            print(f"  {C}Eliminado.{RST}")
+        else:
+            print(f"  {G}{out}{RST}")
+    sleep(2)
+
+# ── Acción: Estado ────────────────────────────────────────────────────────────
+
+def action_status():
+    clr(); print(HEADER, end='')
+    print(f"  {C}{B}ESTADO{RST}\n")
+
+    out = subprocess.run(['bluetoothctl', 'show'],
+                         capture_output=True, text=True).stdout
+    for line in out.splitlines():
+        for key in ('Name:', 'Powered:', 'Discoverable:', 'Pairable:', 'Address:'):
+            if key in line:
+                print(f"  {G}{line.strip()}{RST}")
+
+    devs           = all_devices()
+    paired_macs    = set(paired_devices())
+    connected_macs = set(connected_devices())
+
+    print(f"\n  {C}Dispositivos conocidos:{RST}\n")
+    if not devs:
+        print(f"  {Y}  Ninguno.{RST}")
+    else:
+        print_numbered_list(devs, list(devs.keys()), paired_macs, connected_macs)
+
+    pause()
+
+# ── Conexión interna ──────────────────────────────────────────────────────────
+
+def _do_connect(mac, name, already_paired=False):
+    print(f"\n  {Y}Conectando a {C}{name}{RST}  {G}({mac}){RST}...")
+
+    if not already_paired:
+        print(f"  {Y}Pareando...{RST}")
+        out = bt_run('pair', mac, timeout=20)
+        if 'Failed' in out:
+            print(f"  {R}Error al parear:{RST} {G}{out}{RST}")
+            return
+        bt_run('trust', mac)
+
+    out = bt_run('connect', mac, timeout=12)
+    if 'successful' in out.lower():
+        print(f"  {C}✓ Conectado a {Y}{name}{RST}")
+    else:
+        print(f"  {R}✗ Error al conectar.{RST}")
+        if out:
+            print(f"  {G}{out}{RST}")
+    sleep(2)
+
+# ── Menú principal ────────────────────────────────────────────────────────────
+
+def main():
+    while True:
+        clr()
+        print(HEADER, end='')
+        print(bt_status_line(), '\n')
+
+        print(f"  {R}┌────────────────────────────────┐{RST}")
+        print(f"  {R}│{RST}  {Y}1){RST} {'Conectar dispositivo':<28}{R}│{RST}")
+        print(f"  {R}│{RST}  {Y}2){RST} {'Desconectar dispositivo':<28}{R}│{RST}")
+        print(f"  {R}│{RST}  {Y}3){RST} {'Desemparejar dispositivo':<28}{R}│{RST}")
+        print(f"  {R}│{RST}  {Y}4){RST} {'Estado':<28}{R}│{RST}")
+        print(f"  {R}│{RST}  {Y}0){RST} {'Salir':<28}{R}│{RST}")
+        print(f"  {R}└────────────────────────────────┘{RST}\n")
+
+        try:
+            opt = input(f"  {R}> {RST}").strip()
+        except (KeyboardInterrupt, EOFError):
+            clr(); sys.exit(0)
+
+        if   opt == '1': action_connect()
+        elif opt == '2': action_disconnect()
+        elif opt == '3': action_unpair()
+        elif opt == '4': action_status()
+        elif opt == '0': clr(); sys.exit(0)
+
+if __name__ == '__main__':
+    main()
