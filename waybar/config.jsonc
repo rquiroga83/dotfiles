@@ -1,0 +1,279 @@
+// ▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
+//
+// ██╗    ██╗ █████╗ ██╗   ██╗██████╗  █████╗ ██████╗ 
+// ██║    ██║██╔══██╗╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+// ██║ █╗ ██║███████║ ╚████╔╝ ██████╔╝███████║██████╔╝
+// ██║███╗██║██╔══██║  ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+// ╚███╔███╔╝██║  ██║   ██║   ██████╔╝██║  ██║██║  ██║
+//  ╚══╝╚══╝ ╚═╝  ╚═╝   ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+// 
+// ▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
+{
+  "layer": "top",
+  "width": 1340,
+  "margin-top": 5,
+
+  // ░█▄█░█▀█░█▀▄░█░█░█░░░█▀▀░█▀▀
+  // ░█░█░█░█░█░█░█░█░█░░░█▀▀░▀▀█
+  // ░▀░▀░▀▀▀░▀▀░░▀▀▀░▀▀▀░▀▀▀░▀▀▀
+
+  "modules-left": ["custom/launcher", "hyprland/workspaces"],
+  "modules-center": ["cpu","temperature","memory","disk"],
+  "modules-right":["cava","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
+
+  // Modules Definition
+  "custom/launcher" : {
+	"tooltip": true,
+	"tooltip-format" : "Start Here :)",
+    	"format" : "󰣇 ",
+    	"on-click": "rofi -show drun",
+    	"on-click-right": "killall rofi"
+  },
+
+  "custom/power":{
+	"tooltip": true,
+	"tooltip-format" : "⏻ Power Options",
+    	"format": "<span color='#f7768e'>⏻</span>",	
+	"menu": "on-click",
+    	"menu-file": "~/.config/waybar/power_menu.xml",
+	"menu-actions": {
+		"shutdown": "poweroff",
+		"reboot": "reboot",
+		"suspend": "systemctl suspend",
+		"hibernate": "systemctl hibernate",
+		"logout": "hyprctl dispatch exit"
+	}
+  },
+
+  // ░█░█░█▀█░█▀▄░█░█░█▀▀░█▀█░█▀█░█▀▀░█▀▀░█▀▀
+  // ░█▄█░█░█░█▀▄░█▀▄░▀▀█░█▀▀░█▀█░█░░░█▀▀░▀▀█
+  // ░▀░▀░▀▀▀░▀░▀░▀░▀░▀▀▀░▀░░░▀░▀░▀▀▀░▀▀▀░▀▀▀
+
+  "hyprland/workspaces": {
+	"disable-scroll": true,
+        "on-click": "activate",
+        "all-outputs": true,
+        "active-only": false,
+        "persistent-workspaces": {
+		"1": [],
+		"2": [],
+		"3": [],
+		"4": [],
+		"5": [],
+		"6": [],
+	        "7": []
+        },
+        "format": "{icon}",
+        "format-icons": {
+		"1": "1",
+		"2": "2",
+		"3": "3",
+		"4": "4",
+		"5": "5",
+		"6": "6",
+		"7": "7",
+		"active": "<span font='12'>󰮯</span>",
+		"empty": "<span font='8'></span>",
+		"persistent": "󰊠",
+       }
+   },
+
+
+   "hyprland/window" : {
+        "format" : " {}",
+	"separate-outputs": true,
+	"max-length": 100
+   },
+
+  // ░▀█▀░▀█▀░█▀▀░█▄█░█▀▀
+  // ░░█░░░█░░█▀▀░█░█░▀▀█
+  // ░▀▀▀░░▀░░▀▀▀░▀░▀░▀▀▀
+
+   "mpris": {
+        "player" : "audacious",
+        "dynamic-order": ["title", "artist"],
+        "format": "{status_icon} <i>{dynamic}</i>",
+        "status-icons":{
+                "default": "▶" ,
+                "paused": "⏸" 
+        },
+   },
+
+  "cpu": {
+        "interval": 3,
+        "format": "<span color='#19fc78'> </span> {usage}%",
+        "tooltip": true,
+        "tooltip-format": " CPU: {usage}%\nCore: {usage0}% | {usage1}% | {usage2}% | {usage3}%",
+        "max-length": 10
+   },
+
+  "temperature": {
+    "thermal-zone": 1,
+    "tooltip": true,
+    "tooltip-format": "󰔐 CPU Temp: {temperatureC}°C",
+    "interval": 10,
+    "critical-threshold": 80,
+    "format": "<span color='#ff9e64'>󰔐 </span>{temperatureC}°C",
+    "format-critical": "<span color='#f7768e'>󰔐 </span>{temperatureC}°C"
+  },
+
+  "memory": {
+	"tooltip" : true,
+	"tooltip-format" : "  {used} GB of {total} GB" ,
+        "interval": 30,
+        "format": "<span color='#7dcfff'> </span> {}% ",
+	"format-alt": "<span color='#7dcfff'> </span> {}% {used} GB",
+        "max-length": 100
+   },
+
+  "disk": {
+	"tooltip" : true,
+	"tooltip-format" : " {path}  {percentage_used}% used.  {used} of {total} " ,
+        "format": "<span color='#d08fff'> </span> {percentage_used}%",
+	"format-alt": "<span color='#d08fff'> </span> {used} ",
+        "interval": 30,
+   },
+
+  "custom/nvidia": {
+	"tooltip": true,
+	"tooltip-format" : "󰍹 : ",
+    	"exec": "nvidia-smi --query-gpu=utilization.gpu,temperature.gpu --format=csv,nounits,noheader | sed 's/\\([0-9]\\+\\), \\([0-9]\\+\\)/\\1% 🌡️\\2°C/g'",
+    	"format": "󰍹 {} ",
+    	"interval": 2
+  },
+
+ "cava": {
+	//  "cava_config": "$XDG_CONFIG_HOME/cava/cava.conf",
+		"framerate": 60,
+		"autosens": 0,
+		"sensitivity": 20,
+		"bars": 16,
+		"lower_cutoff_freq": 40,
+		"higher_cutoff_freq": 16000,
+		"method": "pulse",
+		"source": "auto",
+		"stereo": false,
+		"reverse": false,
+        	"hide_on_silence": true,
+        	"sleep_timer": 20,
+		"bar_delimiter": 0,
+		"monstercat": false,
+		"waves": false,
+		"noise_reduction": 0.60,
+		"input_delay": 1,
+		"format-icons" : ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" ],
+		"actions": {
+		           "on-click-right": "mode"
+		           }
+	    },
+
+  "pulseaudio": {
+		"tooltip": true,
+		"tooltip-format" : "  Master Volume: {desc} ({volume}%)",
+		"scroll-step": 5,
+       		"interval": 1,
+		"format": "{icon} {volume}%",
+		"format-muted": "<span color='#FF0000'> </span>",
+		"on-click":"pactl set-sink-mute @DEFAULT_SINK@ toggle",
+		"format-icons": { "default": [
+		   "<span color='#ff9100'> </span>",
+		   "<span color='#7aa2f7'> </span>", 
+		   "<span color='#7aa2f7'> </span>", 
+		   "<span color='#7aa2f7'> </span>"
+           	]
+		}
+	},
+
+   "bluetooth": {
+        "tooltip": true,
+        "tooltip-format": "󰂯 {controller_alias}\n{num_connections} dispositivo(s) conectado(s)",
+        "tooltip-format-connected": "󰂯 {controller_alias}\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "  {device_alias}",
+        "format": "󰂯",
+        "format-disabled": "<span color='#555555'>󰂲</span>",
+        "format-off": "<span color='#555555'>󰂲</span>",
+        "format-connected": "<span color='#7aa2f7'>󰂱</span> {num_connections}",
+        "on-click": "blueman-manager"
+   },
+
+   "network": {
+		"tooltip": true,
+		"format-wifi": "<span color='#9ece6a'> </span> ({signalStrength}%)",
+		"format-ethernet": "<span color='#7aa2f7'>󰈁</span> {bandwidthDownBytes} | {ipaddr}",
+		"format-disconnected": "<span color='#FF0000'>󰌙 </span>",
+        	"interval": 2,
+		"tooltip-format-wifi": "󰢩 Interface: {ifname} \n—————————————————————————\n  {essid} \n󰥛 Signal: {signalStrength} % \n Frequency: {frequency}GHz \n—————————————————————————\n󰶡 {bandwidthDownBytes} - 󰶣 {bandwidthUpBytes}\n—————————————————————————\nIP: {ipaddr} \nSubmask: {netmask} \nGateway: {gwaddr}",
+		"tooltip-format-ethernet": "󰢩 Interface: {ifname} \n󰈁 LAN \n IP: {ipaddr} \n Submask: {netmask} \n Gateway: {gwaddr}",
+		"tooltip-format-disconnected": "󰅛 Disconnected.",
+		"on-click": "nm-connection-editor"
+		
+   },
+
+   "backlight": {
+		"device": "intel_backlight",
+		"tooltip": true,
+		"tooltip-format" : " Brightness: {0} %",
+		"format": "{1} {0}%",
+		"interval":1,
+        	"on-scroll-up": "brightnessctl set +5%",
+		"on-scroll-down": "brightnessctl set 5%-",
+
+		"format-icons": [
+			"<span color='#f7b500'>󰃝 </span>",
+			"<span color='#f7b500'>󰃟 </span>",
+			"<span color='#57ffff'>󰃠 </span>"
+		]
+    },
+
+    "battery": {
+        "states": {
+            "good": 95,
+            "warning": 25,
+            "critical": 10
+        },
+        "format": "{icon}  <span color='#F1F1F1'>{capacity}%</span>",
+        "format-charging": "<span color='#38ff5d'></span> <span color='#F1F1F1'>{capacity}%</span>",
+        "format-plugged": "<span color='#F1F1F1'> {capacity}%</span>",
+        "format-alt": "<span color='#00FFF1'>{time}</span> {icon} <span color='#F1F1F1'> {capacity} %</span>",
+        "format-icons": [
+            "<span color='#f7768e'></span>", 
+            "<span color='#76f7bf'></span>", 
+            "<span color='#76f7bf'></span>", 
+            "<span color='#73fdff'></span>", 
+            "<span color='#73fdff'> </span>"
+        ]
+    },
+
+   "clock": {
+        "tooltip": true,
+        "interval": 60,
+        "format": "  {:%I:%M %p}",
+        "format-alt": "󰸗 {:%A %d %B %Y   %I:%M %p} ",
+        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "calendar": {
+                    "mode"          : "year",
+                    "mode-mon-col"  : 3,
+                    // "weeks-pos"     : "right",
+                    "on-scroll"     : 1,
+                    "format": {
+                              "months":     "<span color='#45e9ff'><b>{}</b></span>",
+                              "days":       "<span color='#f1f1f1'><b>{}</b></span>",
+                              // "weeks":      "<span color='#99ffdd'><b>W{}</b></span>",
+                              "weekdays":   "<span color='#66a8ff'><b>{}</b></span>",
+                              "today":      "<span color='#66a8ff'><b><u>{}</u></b></span>"
+                              }
+                    },
+        "actions":  {
+                    "on-click-right": "mode",
+                    "on-scroll-up": "tz_up",
+                    "on-scroll-down": "tz_down",
+                    "on-scroll-up": "shift_up",
+                    "on-scroll-down": "shift_down"
+                    }
+    },
+
+
+    }
+ 
+
+}

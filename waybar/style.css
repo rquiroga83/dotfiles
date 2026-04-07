@@ -1,0 +1,282 @@
+* {
+  border: none;
+  border-radius: 0px;
+  font-family: "JetbrainsMono Nerd Font";
+  font-size: 14px;
+  min-height: 10px;
+}
+
+window {
+
+}
+
+window#waybar {
+  background:
+    linear-gradient(135deg, transparent 10px, #0a0000 10px) top left  / 51% 100% no-repeat,
+    linear-gradient(225deg, transparent 10px, #0a0000 10px) top right / 51% 100% no-repeat;
+  border-bottom: 1px solid #ff003c;
+  margin: 4px 4px 0px 4px;
+  border-radius: 0px;
+}
+
+window#waybar.hidden {
+  opacity: 0.2;
+}
+
+#window {
+  padding-left: 6px;
+  padding-right: 10px;
+  border-radius: 0px;
+  transition: none;
+  color: transparent;
+  background: transparent;
+}
+
+/* ── Workspaces ─────────────────────────────────────── */
+#workspaces {
+  margin: 5px 6px 5px 8px;
+  background: linear-gradient(135deg, transparent 8px, #1a0000 8px);
+  transition: none;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+#workspaces button {
+  transition: none;
+  color: #ff6666;
+  background: transparent;
+  margin-right: 1px;
+}
+
+#workspaces button.persistent {
+  transition: none;
+  color: #660000;
+  background: transparent;
+  font-size: 1px;
+}
+
+#workspaces button.empty {
+  color: #3a0000;
+  font-size: 1px;
+  transition: none;
+  background: transparent;
+}
+
+#workspaces button.active {
+  color: #fcee0a;
+  background: transparent;
+  font-size: 2px;
+  animation-name: blink-workspace;
+  animation-duration: 0.8s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes blink-workspace {
+  from { color: #fcee0a; }
+  to   { color: #7a6e00; }
+}
+
+/* ── Módulos base ────────────────────────────────────── */
+#bluetooth,
+#network,
+#pulseaudio,
+#battery,
+#backlight,
+#clock,
+#temperature,
+#memory,
+#disk,
+#cpu,
+#tray {
+  margin: 5px 0px 5px 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background: linear-gradient(135deg, transparent 8px, #2b0000 8px);
+  transition: none;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* ── Colores por módulo ──────────────────────────────── */
+#bluetooth {
+  color: #00cfff;
+}
+
+#network {
+  color: #fcee0a;
+}
+
+#pulseaudio {
+  color: #00cfff;
+}
+
+#battery {
+  color: #fcee0a;
+}
+
+#battery.charging,
+#battery.plugged {
+  color: #00cfff;
+  background: linear-gradient(135deg, transparent 8px, #1a0000 8px);
+}
+
+#battery.critical:not(.charging) {
+  background: linear-gradient(135deg, transparent 8px, #ff003c 8px);
+  color: #0a0000;
+  animation-name: blink-critical;
+  animation-duration: 0.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes blink-critical {
+  to {
+    color: #ffcccc;
+    background: linear-gradient(135deg, transparent 8px, #660000 8px);
+  }
+}
+
+#backlight {
+  color: #fcee0a;
+}
+
+#clock {
+  color: #ff003c;
+}
+
+#temperature {
+  color: #00cfff;
+  font-weight: normal;
+}
+
+#temperature.critical {
+  background: linear-gradient(135deg, transparent 8px, #ff003c 8px);
+  color: #0a0000;
+  animation-name: blink-critical;
+  animation-duration: 0.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+#memory {
+  color: #ff003c;
+  font-weight: normal;
+}
+
+#disk {
+  color: #fcee0a;
+  font-weight: normal;
+}
+
+#cpu {
+  color: #00cfff;
+  font-weight: normal;
+}
+
+/* ── Tray ───────────────────────────────────────────── */
+#tray {
+  color: #ff003c;
+}
+
+/* ── Launcher ───────────────────────────────────────── */
+#custom-launcher {
+  font-size: 18px;
+  margin-left: 8px;
+  padding-left: 10px;
+  padding-right: 5px;
+  border-radius: 0px;
+  transition: none;
+  color: #fcee0a;
+  background: transparent;
+}
+
+/* ── Power ──────────────────────────────────────────── */
+#custom-power {
+  margin: 5px 10px 5px 6px;
+  padding-left: 10px;
+  padding-right: 15px;
+  border-radius: 0px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: none;
+  color: #ff003c;
+  background: transparent;
+}
+
+/* ── Updates ────────────────────────────────────────── */
+#custom-updates {
+  margin: 5px 0px 5px 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+  transition: none;
+  color: #0a0000;
+  background: linear-gradient(135deg, transparent 8px, #fcee0a 8px);
+  font-weight: bold;
+}
+
+/* ── Cava ───────────────────────────────────────────── */
+#cava {
+  margin: 5px 8px 5px 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 0px;
+  font-size: 12px;
+  color: #00cfff;
+  background: transparent;
+}
+
+/* ── Media ──────────────────────────────────────────── */
+#custom-media {
+  margin: 5px 0px 5px 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+  transition: none;
+  color: #0a0000;
+  background: linear-gradient(135deg, transparent 8px, #00cfff 8px);
+  font-weight: bold;
+}
+
+/* ── Tooltips ───────────────────────────────────────── */
+tooltip {
+  background: #0a0000;
+  border: 1px solid #ff003c;
+  border-radius: 0px;
+  padding: 4px;
+}
+
+tooltip label {
+  color: #ffcccc;
+  font-family: "JetbrainsMono Nerd Font";
+  font-size: 13px;
+}
+
+/* ── Menú power ─────────────────────────────────────── */
+menu {
+  background: #0a0000;
+  border: 1px solid #ff003c;
+  border-radius: 0px;
+  padding: 4px 0px;
+  color: #ffcccc;
+  font-family: "JetbrainsMono Nerd Font";
+  font-size: 13px;
+}
+
+menuitem {
+  padding: 6px 16px;
+  border-radius: 0px;
+  color: #ffcccc;
+  transition: none;
+}
+
+menuitem:hover {
+  background: #ff003c;
+  color: #0a0000;
+}
+
+menuitem * {
+  color: inherit;
+}

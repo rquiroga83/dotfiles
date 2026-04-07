@@ -1,0 +1,172 @@
+/* Cyberpunk Red — tema rofi basado en DESIGN_GUIDE.md */
+
+* {
+    bg-deep:     #0a0000;
+    bg-module:   #1a0000;
+    bg-raised:   #2b0000;
+    red:         #ff003c;
+    red-dark:    #660000;
+    yellow:      #fcee0a;
+    cyan:        #00cfff;
+    text-soft:   #ffcccc;
+    black:       #0a0000;
+
+    background-color: transparent;
+    text-color:       @text-soft;
+    font:             "JetBrainsMono Nerd Font 10";
+    width:            620;
+}
+
+window {
+    height:           420px;
+    border:           0px;
+    border-radius:    0px;
+    background-color: transparent;
+    background-image: url("/home/andres/.config/rofi/corner-cut.svg");
+    padding:          10px 10px 10px 10px;
+}
+
+mainbox {
+    background-color: transparent;
+    spacing:          6px;
+    padding:          6px;
+}
+
+inputbar {
+    background-color: @bg-module;
+    border:           0px 0px 1px 0px;
+    border-color:     @red;
+    padding:          8px 10px;
+    spacing:          6px;
+    children:         [ prompt, entry ];
+}
+
+prompt {
+    background-color: transparent;
+    text-color:       @yellow;
+    font:             "JetBrainsMono Nerd Font Bold 12";
+}
+
+entry {
+    background-color: transparent;
+    text-color:       @yellow;
+    placeholder:      "buscar...";
+    placeholder-color: @red-dark;
+    cursor:           text;
+}
+
+case-indicator {
+    background-color: transparent;
+    text-color:       @red;
+}
+
+listview {
+    background-color: transparent;
+    border:           0px;
+    spacing:          2px;
+    padding:          4px 0px 0px 0px;
+    lines:            8;
+    scrollbar:        false;
+}
+
+element {
+    background-color: transparent;
+    text-color:       @cyan;
+    padding:          6px 10px;
+    border-radius:    0px;
+    spacing:          8px;
+    orientation:      horizontal;
+}
+
+element normal.normal {
+    background-color: transparent;
+    text-color:       @cyan;
+}
+
+element normal.urgent {
+    background-color: @red-dark;
+    text-color:       @red;
+}
+
+element normal.active {
+    background-color: @bg-raised;
+    text-color:       @cyan;
+}
+
+element selected.normal {
+    background-color: @red;
+    text-color:       @black;
+}
+
+element selected.urgent {
+    background-color: @red;
+    text-color:       @black;
+}
+
+element selected.active {
+    background-color: @red;
+    text-color:       @black;
+}
+
+element alternate.normal {
+    background-color: @bg-module;
+    text-color:       @cyan;
+}
+
+element alternate.active {
+    background-color: @bg-module;
+    text-color:       @cyan;
+}
+
+element-icon {
+    background-color: transparent;
+    size:             18px;
+}
+
+element-text {
+    background-color: transparent;
+    text-color:       inherit;
+    highlight:        bold #ff003c;
+    vertical-align:   0.5;
+}
+
+mode-switcher {
+    background-color: @bg-module;
+    border:           1px 0px 0px 0px;
+    border-color:     @red-dark;
+    spacing:          0px;
+    padding:          4px 0px 0px 0px;
+}
+
+button {
+    background-color: transparent;
+    text-color:       @red-dark;
+    padding:          6px 10px;
+    border-radius:    0px;
+}
+
+button selected {
+    background-color: @bg-raised;
+    text-color:       @yellow;
+    border:           0px 0px 1px 0px;
+    border-color:     @yellow;
+}
+
+scrollbar {
+    background-color: @bg-module;
+    handle-color:     @red;
+    handle-width:     4px;
+    border:           0px;
+}
+
+message {
+    background-color: @bg-raised;
+    border:           1px;
+    border-color:     @red-dark;
+    padding:          6px 10px;
+}
+
+textbox {
+    background-color: transparent;
+    text-color:       @cyan;
+}
