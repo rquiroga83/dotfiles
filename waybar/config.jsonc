@@ -17,9 +17,12 @@
   // ░█░█░█░█░█░█░█░█░█░░░█▀▀░▀▀█
   // ░▀░▀░▀▀▀░▀▀░░▀▀▀░▀▀▀░▀▀▀░▀▀▀
 
-  "modules-left": ["custom/launcher", "hyprland/workspaces", "mpris"],
-  "modules-center": ["cpu","temperature","memory","disk"],
-  "modules-right":["cava","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
+  //"modules-left": ["custom/launcher", "hyprland/workspaces", "mpris"],
+  //"modules-center": ["cpu","temperature","memory","disk"],
+  //"modules-right":["cava","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
+  "modules-left": ["custom/launcher", "hyprland/workspaces", "mpris", "cava"],
+  "modules-center": [],
+  "modules-right":["cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
 
   // Modules Definition
   "custom/launcher" : {
@@ -99,6 +102,31 @@
         "ignored-players": ["firefox"]
    },
 
+    "cava": {
+	//  "cava_config": "$XDG_CONFIG_HOME/cava/cava.conf",
+		"framerate": 60,
+		"autosens": 0,
+		"sensitivity": 2,
+		"bars": 16,
+		"lower_cutoff_freq": 40,
+		"higher_cutoff_freq": 16000,
+		"method": "pulse",
+		"source": "auto",
+		"stereo": false,
+		"reverse": false,
+        	"hide_on_silence": false,
+        	"sleep_timer": 5,
+		"bar_delimiter": 0,
+		"monstercat": false,
+		"waves": false,
+		"noise_reduction": 0.60,
+		"input_delay": 1,
+		"format-icons" : ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" ],
+		"actions": {
+		           "on-click-right": "mode"
+		           }
+	    },
+
   "cpu": {
         "interval": 3,
         "format": "<span color='#19fc78'> </span> {usage}%",
@@ -135,30 +163,7 @@
    },
 
 
- "cava": {
-	//  "cava_config": "$XDG_CONFIG_HOME/cava/cava.conf",
-		"framerate": 60,
-		"autosens": 0,
-		"sensitivity": 20,
-		"bars": 16,
-		"lower_cutoff_freq": 40,
-		"higher_cutoff_freq": 16000,
-		"method": "pipewire",
-		"source": "auto",
-		"stereo": false,
-		"reverse": false,
-        	"hide_on_silence": true,
-        	"sleep_timer": 20,
-		"bar_delimiter": 0,
-		"monstercat": false,
-		"waves": false,
-		"noise_reduction": 0.60,
-		"input_delay": 1,
-		"format-icons" : ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" ],
-		"actions": {
-		           "on-click-right": "mode"
-		           }
-	    },
+
 
   "pulseaudio": {
 		"tooltip": true,
