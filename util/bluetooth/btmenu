@@ -470,13 +470,14 @@ def main():
         print(HEADER, end='')
         print(bt_status_line(), '\n')
 
-        print(f"  {R}┌────────────────────────────────┐{RST}")
-        print(f"  {R}│{RST}  {Y}1){RST} {'Conectar dispositivo':<28}{R}│{RST}")
-        print(f"  {R}│{RST}  {Y}2){RST} {'Desconectar dispositivo':<28}{R}│{RST}")
-        print(f"  {R}│{RST}  {Y}3){RST} {'Desemparejar dispositivo':<28}{R}│{RST}")
-        print(f"  {R}│{RST}  {Y}4){RST} {'Estado':<28}{R}│{RST}")
-        print(f"  {R}│{RST}  {Y}0){RST} {'Salir':<28}{R}│{RST}")
-        print(f"  {R}└────────────────────────────────┘{RST}\n")
+        print(f"  {R}{RST}")
+        print(f"  {R}{RST}  {Y}1){RST} {'Conectar dispositivo':<28}{R}{RST}")
+        print(f"  {R}{RST}  {Y}2){RST} {'Desconectar dispositivo':<28}{R}{RST}")
+        print(f"  {R}{RST}  {Y}3){RST} {'Desemparejar dispositivo':<28}{R}{RST}")
+        print(f"  {R}{RST}  {Y}4){RST} {'Estado':<28}{R}{RST}")
+        print(f"  {R}{RST}  {Y}0){RST} {'Salir':<28}{R}{RST}")
+        #print(f"  {R}────────────────────────────────{RST}\n")
+        print(f"  {R}{RST}")
 
         try:
             opt = input(f"  {R}> {RST}").strip()

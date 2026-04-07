@@ -493,13 +493,15 @@ def main():
         print(HEADER, end='')
         print(wifi_status_line(), '\n')
 
-        print(f"  {R}┌────────────────────────────────┐{RST}")
-        print(f"  {R}│{RST}  {Y}1){RST} {'Conectar a red':<28}{R}│{RST}")
-        print(f"  {R}│{RST}  {Y}2){RST} {'Desconectar':<28}{R}│{RST}")
-        print(f"  {R}│{RST}  {Y}3){RST} {'Olvidar red guardada':<28}{R}│{RST}")
-        print(f"  {R}│{RST}  {Y}4){RST} {'Estado':<28}{R}│{RST}")
-        print(f"  {R}│{RST}  {Y}0){RST} {'Salir':<28}{R}│{RST}")
-        print(f"  {R}└────────────────────────────────┘{RST}\n")
+        print(f"  {R}{RST}\n")
+        print(f"  {R}{RST}  {Y}1){RST} {'Conectar a red':<28}{R}{RST}")
+        print(f"  {R}{RST}  {Y}2){RST} {'Desconectar':<28}{R}{RST}")
+        print(f"  {R}{RST}  {Y}3){RST} {'Olvidar red guardada':<28}{R}{RST}")
+        print(f"  {R}{RST}  {Y}4){RST} {'Estado':<28}{R}{RST}")
+        print(f"  {R}{RST}  {Y}0){RST} {'Salir':<28}{R}{RST}")
+        #print(f"  {R}────────────────────────────────{RST}\n")
+        print(f"  {R}{RST}\n")
+        
 
         try:
             opt = input(f"  {R}> {RST}").strip()
