@@ -1,0 +1,516 @@
+#!/usr/bin/env python3
+"""wifimenu — gestor interactivo de WiFi (Cyberpunk Red)"""
+
+import getpass
+import os
+import re
+import select
+import subprocess
+import sys
+import termios
+import threading
+import tty
+from time import sleep
+
+# ── Colores ───────────────────────────────────────────────────────────────────
+R   = '\033[38;2;255;0;60m'
+Y   = '\033[38;2;252;238;10m'
+C   = '\033[38;2;0;207;255m'
+G   = '\033[38;2;255;204;204m'
+B   = '\033[1m'
+RST = '\033[0m'
+
+HEADER = (
+    f"{R}{B}"
+    "  ██╗    ██╗██╗███████╗██╗\n"
+    "  ██║    ██║██║██╔════╝██║\n"
+    "  ██║ █╗ ██║██║█████╗  ██║\n"
+    "  ██║███╗██║██║██╔══╝  ██║\n"
+    "  ╚███╔███╔╝██║██║     ██║\n"
+    "   ╚══╝╚══╝ ╚═╝╚═╝     ╚═╝\n"
+    f"{RST}"
+)
+
+SPIN      = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏']
+PAGE_SIZE = 10
+
+# ── Helpers de terminal ───────────────────────────────────────────────────────
+
+def clr():
+    os.system('clear')
+
+def cursor_hide():
+    sys.stdout.write('\033[?25l'); sys.stdout.flush()
+
+def cursor_show():
+    sys.stdout.write('\033[?25h'); sys.stdout.flush()
+
+def cursor_save():
+    sys.stdout.write('\033[s'); sys.stdout.flush()
+
+def cursor_restore():
+    sys.stdout.write('\033[u'); sys.stdout.flush()
+
+def erase_down():
+    sys.stdout.write('\033[J'); sys.stdout.flush()
+
+def getch(timeout=0.4):
+    fd = sys.stdin.fileno()
+    old = termios.tcgetattr(fd)
+    try:
+        tty.setraw(fd)
+        r, _, _ = select.select([sys.stdin], [], [], timeout)
+        if r:
+            ch = sys.stdin.read(1)
+            if ch == '\x1b':
+                select.select([sys.stdin], [], [], 0.05)
+                try:
+                    sys.stdin.read(2)
+                except Exception:
+                    pass
+            return ch
+        return None
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old)
+
+def pause(msg="Enter para continuar..."):
+    try:
+        input(f"\n  {R}{msg}{RST}")
+    except (KeyboardInterrupt, EOFError):
+        pass
+
+def pick_numbers(prompt, max_idx):
+    try:
+        raw = input(f"  {R}{prompt}: {RST}").strip()
+    except (KeyboardInterrupt, EOFError):
+        return []
+    if not raw or raw == '0':
+        return []
+    indices = []
+    for tok in raw.split():
+        try:
+            n = int(tok)
+            if 1 <= n <= max_idx:
+                indices.append(n - 1)
+        except ValueError:
+            pass
+    return indices
+
+# ── WiFi helpers ──────────────────────────────────────────────────────────────
+
+def nm(*args, timeout=8):
+    try:
+        r = subprocess.run(
+            ['nmcli', *args],
+            capture_output=True, text=True, timeout=timeout
+        )
+        return (r.stdout + r.stderr).strip()
+    except subprocess.TimeoutExpired:
+        return ""
+
+def _split_terse(line):
+    """Divide una línea nmcli terse en campos (los : dentro de valores van escapados como \\:)."""
+    parts = re.split(r'(?<!\\):', line)
+    return [p.replace('\\:', ':') for p in parts]
+
+def wifi_device():
+    """Devuelve el nombre de la interfaz WiFi activa (ej: wlan0)."""
+    out = nm('-t', '-f', 'DEVICE,TYPE,STATE', 'device')
+    for line in out.splitlines():
+        p = _split_terse(line)
+        if len(p) >= 2 and p[1] == 'wifi':
+            return p[0]
+    return None
+
+def current_connection():
+    """Devuelve (ssid, ip) de la conexión WiFi activa, o (None, None)."""
+    dev = wifi_device()
+    if not dev:
+        return None, None
+    out = nm('-t', '-f', 'GENERAL.CONNECTION,IP4.ADDRESS', 'device', 'show', dev)
+    ssid = ip = None
+    for line in out.splitlines():
+        if line.startswith('GENERAL.CONNECTION:'):
+            val = line.split(':', 1)[1].strip()
+            if val and val != '--':
+                ssid = val
+        if line.startswith('IP4.ADDRESS'):
+            ip = line.split(':', 1)[1].strip()
+    return ssid, ip
+
+def saved_wifi():
+    """Devuelve {name: uuid} de conexiones WiFi guardadas."""
+    out = nm('-t', '-f', 'NAME,TYPE,UUID', 'connection', 'show')
+    conns = {}
+    for line in out.splitlines():
+        p = _split_terse(line)
+        if len(p) >= 3 and 'wireless' in p[1]:
+            conns[p[0]] = p[2]
+    return conns
+
+def scan_networks():
+    """Devuelve lista de dicts con las redes visibles (sin rescan)."""
+    out = nm('-t', '-f', 'IN-USE,SSID,BSSID,SIGNAL,SECURITY',
+             'device', 'wifi', 'list')
+    nets = []
+    seen_bssid = set()
+    for line in out.splitlines():
+        p = _split_terse(line)
+        if len(p) < 5:
+            continue
+        in_use, ssid, bssid, signal, security = p[0], p[1], p[2], p[3], p[4]
+        if not bssid or bssid == '--' or bssid in seen_bssid:
+            continue
+        seen_bssid.add(bssid)
+        try:
+            sig = int(signal)
+        except ValueError:
+            sig = 0
+        nets.append({
+            'ssid'    : ssid or '[oculta]',
+            'bssid'   : bssid,
+            'signal'  : sig,
+            'security': security if security and security != '--' else '',
+            'in_use'  : in_use.strip() == '*',
+        })
+    nets.sort(key=lambda x: x['signal'], reverse=True)
+    return nets
+
+def signal_bar(pct):
+    pct = int(pct)
+    n = min(4, pct // 25)
+    filled = '█' * n
+    empty  = '░' * (4 - n)
+    if pct >= 70: color = C
+    elif pct >= 40: color = Y
+    else: color = R
+    return f"{color}{filled}{G}{empty}{RST}"
+
+def wifi_status_line():
+    ssid, ip = current_connection()
+    if ssid:
+        return f"  {C}●{RST} WiFi: {C}{B}{ssid}{RST}  {G}{ip or ''}{RST}"
+    return f"  {R}●{RST} WiFi: {R}{B}DESCONECTADO{RST}"
+
+# ── Escaneo en background ─────────────────────────────────────────────────────
+
+def start_scan(nets: list, lock: threading.Lock, stop: threading.Event):
+    """
+    Thread que lanza un rescan y luego actualiza `nets` cada 2s.
+    `nets` es una lista mutable; reemplaza su contenido en cada ciclo.
+    """
+    def _worker():
+        # Rescan inicial (puede tardar ~2-3s)
+        subprocess.run(['nmcli', 'device', 'wifi', 'rescan'],
+                       capture_output=True, timeout=10)
+        while not stop.is_set():
+            fresh = scan_networks()
+            with lock:
+                nets.clear()
+                nets.extend(fresh)
+            stop.wait(2.0)
+
+    t = threading.Thread(target=_worker, daemon=True)
+    t.start()
+    return t
+
+# ── Visualización de redes ────────────────────────────────────────────────────
+
+def print_net_list(nets, spin_char, saved_ssids=None, numbered=False):
+    saved_ssids = saved_ssids or set()
+    if not nets:
+        print(f"  {G}Escaneando redes... {C}{spin_char}{RST}")
+        return
+
+    label = f"  {G}Redes encontradas: {C}{len(nets)}{RST}  {spin_char}\n"
+    print(label)
+    for i, net in enumerate(nets, 1):
+        ssid     = net['ssid']
+        bar      = signal_bar(net['signal'])
+        sec      = f"{G}{net['security']:<8}{RST}" if net['security'] else f"{R}{'abierta':<8}{RST}"
+        tags = ''
+        if net['in_use']:           tags += f" {C}[conectado]{RST}"
+        if ssid in saved_ssids:     tags += f" {Y}[guardado]{RST}"
+        num = f"{C}[{i:2d}]{RST}  " if numbered else "  "
+        print(f"  {num}{bar} {Y}{ssid:<32}{RST} {sec}{tags}")
+
+# ── Acción: Conectar (escaneo en vivo + selección sin parar el escaneo) ───────
+
+def action_connect():
+    dev = wifi_device()
+    if not dev:
+        print(f"\n  {R}No se encontró interfaz WiFi.{RST}"); sleep(2); return
+
+    saved       = saved_wifi()
+    saved_ssids = set(saved.keys())
+
+    # Carga inicial inmediata (sin rescan) y arranca escaneo en background
+    nets = scan_networks()
+    lock = threading.Lock()
+    stop = threading.Event()
+    start_scan(nets, lock, stop)
+
+    clr(); print(HEADER, end='')
+    print(f"  {C}{B}CONECTAR RED WiFi — ESCANEO EN VIVO{RST}")
+    print(f"  {G}Escribe el número y pulsa {Y}Enter{G} · {Y}N{G}/{Y}P{G}=páginas · {Y}Esc{G}=salir{RST}\n")
+    cursor_save()
+    cursor_hide()
+
+    page     = 0       # página actual (0-based)
+    buf      = ''      # dígitos escritos por el usuario
+    si       = 0       # índice spinner
+    snapshot = []      # última lista renderizada
+    selected = None    # red elegida → sale del loop
+
+    try:
+        while selected is None:
+
+            # Snapshot ordenado por señal (se actualizará cada ~2s por el thread)
+            with lock:
+                snapshot = sorted(nets, key=lambda x: x['signal'], reverse=True)
+
+            total       = len(snapshot)
+            total_pages = max(1, (total + PAGE_SIZE - 1) // PAGE_SIZE)
+            page        = min(page, max(0, total_pages - 1))
+            start_idx   = page * PAGE_SIZE
+            page_nets   = snapshot[start_idx : start_idx + PAGE_SIZE]
+
+            # ── Redibujar zona dinámica ────────────────────────────────────
+            cursor_restore(); erase_down()
+
+            spin = SPIN[si]; si = (si + 1) % len(SPIN)
+
+            # Cabecera de conteo + paginación
+            pg_info = f"  {G}│  Pág. {C}{page+1}{G}/{C}{total_pages}{RST}" if total_pages > 1 else ''
+            if total:
+                print(f"  {G}Encontradas: {C}{total}{RST}  {spin}{pg_info}\n")
+            else:
+                print(f"  {G}Buscando... {C}{spin}{RST}\n")
+
+            # Lista de redes (siempre PAGE_SIZE filas para altura estable)
+            for row in range(PAGE_SIZE):
+                if row < len(page_nets):
+                    net  = page_nets[row]
+                    num  = start_idx + row + 1
+                    bar  = signal_bar(net['signal'])
+                    ssid = net['ssid']
+                    sec  = f"{net['security']:<5}" if net['security'] else 'open '
+                    sec_c = f"{G}{sec}{RST}" if net['security'] else f"{R}{sec}{RST}"
+                    tags = ''
+                    if net['in_use']:        tags += f"{C}●{RST}"
+                    if ssid in saved_ssids:  tags += f"{Y}★{RST}"
+                    # Resaltar número si el buffer es prefijo
+                    hi = buf and str(num).startswith(buf)
+                    num_c = f"{Y}[{num:2d}]{RST}" if hi else f"{C}[{num:2d}]{RST}"
+                    print(f"  {num_c} {bar} {Y}{ssid:<28}{RST} {sec_c} {tags}")
+                else:
+                    print()   # línea vacía → altura constante
+
+            # Separador + leyenda + prompt
+            print(f"\n  {R}{'─' * 46}{RST}")
+            legend = f"  {C}●{RST}conectado  {Y}★{RST}guardado"
+            if total_pages > 1:
+                legend += f"  {Y}N{RST}=sig.  {Y}P{RST}=ant."
+            print(legend)
+            buf_disp = f"{Y}{buf}{RST}" if buf else ''
+            print(f"\n  {R}>{RST} {buf_disp}\033[K", end='', flush=True)
+
+            # ── Leer tecla (sin bloquear) ──────────────────────────────────
+            key = getch(0.35)
+            if key is None:
+                continue
+
+            if key in ('\r', '\n'):              # Enter → conectar
+                if buf:
+                    try:
+                        n = int(buf)
+                        if 1 <= n <= total:
+                            selected = snapshot[n - 1]
+                    except ValueError:
+                        pass
+                    buf = ''
+
+            elif key in ('\x7f', '\x08'):        # Backspace
+                buf = buf[:-1]
+
+            elif key.isdigit():                  # Dígito → acumular
+                buf += key
+
+            elif key.lower() == 'n':             # Siguiente página
+                page = min(page + 1, total_pages - 1)
+                buf  = ''
+
+            elif key.lower() == 'p':             # Página anterior
+                page = max(page - 1, 0)
+                buf  = ''
+
+            elif key == '\x1b':                  # Esc → salir
+                break
+
+    except KeyboardInterrupt:
+        pass
+    finally:
+        cursor_show()
+        stop.set()
+
+    if selected is None:
+        return
+
+    print('\n')
+    _do_connect_net(selected, saved_ssids)
+
+# ── Acción: Desconectar ───────────────────────────────────────────────────────
+
+def action_disconnect():
+    dev = wifi_device()
+    if not dev:
+        print(f"\n  {R}No se encontró interfaz WiFi.{RST}"); sleep(2); return
+
+    ssid, ip = current_connection()
+    if not ssid:
+        print(f"\n  {G}No hay conexión WiFi activa.{RST}"); sleep(2); return
+
+    print(f"\n  {Y}Desconectando de {C}{ssid}{RST}  {G}({ip}){RST}...")
+    out = nm('device', 'disconnect', dev, timeout=8)
+    if 'successfully' in out.lower() or 'desconectad' in out.lower():
+        print(f"  {C}Desconectado.{RST}")
+    else:
+        print(f"  {G}{out}{RST}")
+    sleep(2)
+
+# ── Acción: Olvidar red ───────────────────────────────────────────────────────
+
+def action_forget():
+    saved = saved_wifi()
+    if not saved:
+        print(f"\n  {G}No hay redes guardadas.{RST}"); sleep(2); return
+
+    cur_ssid, _ = current_connection()
+    order        = list(saved.keys())
+
+    print(f"\n  {C}Redes guardadas:{RST}\n")
+    for i, name in enumerate(order, 1):
+        tag = f" {C}[conectado]{RST}" if name == cur_ssid else ''
+        print(f"  {C}[{i:2d}]{RST}  {Y}{name}{RST}{tag}")
+    print()
+
+    indices = pick_numbers("Número(s) (0 = cancelar)", len(order))
+    if not indices:
+        return
+
+    for idx in indices:
+        name = order[idx]
+        print(f"\n  {Y}Eliminando {C}{name}{RST}...")
+        if name == cur_ssid:
+            nm('device', 'disconnect', wifi_device() or '', timeout=5)
+        out = nm('connection', 'delete', saved[name], timeout=8)
+        if 'successfully' in out.lower() or 'eliminad' in out.lower() or not out:
+            print(f"  {C}Red olvidada.{RST}")
+        else:
+            print(f"  {G}{out}{RST}")
+    sleep(2)
+
+# ── Acción: Estado ────────────────────────────────────────────────────────────
+
+def action_status():
+    clr(); print(HEADER, end='')
+    print(f"  {C}{B}ESTADO WiFi{RST}\n")
+
+    dev = wifi_device()
+    if not dev:
+        print(f"  {R}No se encontró interfaz WiFi.{RST}")
+        pause(); return
+
+    out = nm('-f', 'GENERAL,IP4,IP6', 'device', 'show', dev)
+    keys = ('GENERAL.DEVICE', 'GENERAL.TYPE', 'GENERAL.STATE',
+            'GENERAL.CONNECTION', 'IP4.ADDRESS', 'IP4.GATEWAY')
+    labels = {'GENERAL.DEVICE'    : 'Interfaz',
+              'GENERAL.TYPE'      : 'Tipo',
+              'GENERAL.STATE'     : 'Estado',
+              'GENERAL.CONNECTION': 'Red',
+              'IP4.ADDRESS'       : 'IP',
+              'IP4.GATEWAY'       : 'Gateway'}
+    for line in out.splitlines():
+        for k in keys:
+            if line.startswith(k + ':'):
+                val = line.split(':', 1)[1].strip()
+                print(f"  {G}{labels[k]:<12}{RST} {Y}{val}{RST}")
+
+    print(f"\n  {C}Redes guardadas:{RST}\n")
+    saved    = saved_wifi()
+    cur_ssid, _ = current_connection()
+    if not saved:
+        print(f"  {Y}  Ninguna.{RST}")
+    else:
+        visible_ssids = {n['ssid'] for n in scan_networks()}
+        for name in saved:
+            tag = ''
+            if name == cur_ssid:       tag += f" {C}[conectado]{RST}"
+            if name in visible_ssids:  tag += f" {G}[visible]{RST}"
+            print(f"  {G}▸{RST} {Y}{name}{RST}{tag}")
+
+    pause()
+
+# ── Conexión interna ──────────────────────────────────────────────────────────
+
+def _do_connect_net(net, saved_ssids=None):
+    saved_ssids = saved_ssids or set()
+    ssid  = net['ssid']
+    bssid = net['bssid']
+    sec   = net['security']
+
+    print(f"\n  {Y}Conectando a {C}{ssid}{RST}  {G}({bssid}){RST}...")
+
+    if ssid in saved_ssids:
+        # Ya tiene perfil guardado, conectar directamente
+        out = nm('connection', 'up', ssid, timeout=20)
+    elif sec:
+        # Red con contraseña
+        try:
+            pwd = getpass.getpass(f"  {Y}Contraseña: {RST}")
+        except (KeyboardInterrupt, EOFError):
+            print(f"\n  {R}Cancelado.{RST}"); return
+        out = nm('device', 'wifi', 'connect', bssid,
+                 'password', pwd, timeout=30)
+    else:
+        # Red abierta
+        out = nm('device', 'wifi', 'connect', bssid, timeout=20)
+
+    if 'successfully' in out.lower() or 'activad' in out.lower():
+        _, ip = current_connection()
+        print(f"  {C}✓ Conectado.{RST}" + (f"  {G}{ip}{RST}" if ip else ''))
+    else:
+        print(f"  {R}✗ Error al conectar.{RST}")
+        if out:
+            print(f"  {G}{out}{RST}")
+    sleep(2)
+
+# ── Menú principal ────────────────────────────────────────────────────────────
+
+def main():
+    while True:
+        clr()
+        print(HEADER, end='')
+        print(wifi_status_line(), '\n')
+
+        print(f"  {R}┌────────────────────────────────┐{RST}")
+        print(f"  {R}│{RST}  {Y}1){RST} {'Conectar a red':<28}{R}│{RST}")
+        print(f"  {R}│{RST}  {Y}2){RST} {'Desconectar':<28}{R}│{RST}")
+        print(f"  {R}│{RST}  {Y}3){RST} {'Olvidar red guardada':<28}{R}│{RST}")
+        print(f"  {R}│{RST}  {Y}4){RST} {'Estado':<28}{R}│{RST}")
+        print(f"  {R}│{RST}  {Y}0){RST} {'Salir':<28}{R}│{RST}")
+        print(f"  {R}└────────────────────────────────┘{RST}\n")
+
+        try:
+            opt = input(f"  {R}> {RST}").strip()
+        except (KeyboardInterrupt, EOFError):
+            clr(); sys.exit(0)
+
+        if   opt == '1': action_connect()
+        elif opt == '2': action_disconnect()
+        elif opt == '3': action_forget()
+        elif opt == '4': action_status()
+        elif opt == '0': clr(); sys.exit(0)
+
+if __name__ == '__main__':
+    main()

@@ -205,7 +205,7 @@
 		"tooltip-format-wifi": "󰢩 Interface: {ifname} \n—————————————————————————\n  {essid} \n󰥛 Signal: {signalStrength} % \n Frequency: {frequency}GHz \n—————————————————————————\n󰶡 {bandwidthDownBytes} - 󰶣 {bandwidthUpBytes}\n—————————————————————————\nIP: {ipaddr} \nSubmask: {netmask} \nGateway: {gwaddr}",
 		"tooltip-format-ethernet": "󰢩 Interface: {ifname} \n󰈁 LAN \n IP: {ipaddr} \n Submask: {netmask} \n Gateway: {gwaddr}",
 		"tooltip-format-disconnected": "󰅛 Disconnected.",
-		"on-click": "nm-connection-editor"
+		"on-click": "kitty --class wifimenu --title wifimenu ~/dotfiles/util/wifi/wifimenu"
 		
    },
 
