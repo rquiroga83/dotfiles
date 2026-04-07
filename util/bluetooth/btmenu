@@ -30,7 +30,8 @@ HEADER = (
     f"{RST}"
 )
 
-SPIN = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏']
+SPIN      = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏']
+PAGE_SIZE = 10
 
 # ── Helpers de terminal ───────────────────────────────────────────────────────
 
@@ -224,113 +225,132 @@ def print_numbered_list(devs, order, paired_macs=None, connected_macs=None):
         if mac in paired_macs:    tags += f" {Y}[pareado]{RST}"
         print(f"  {C}[{i:2d}]{RST}  {G}{mac}{RST}  {Y}{name:<34}{RST}{tags}")
 
-# ── Acción: Conectar (pareados primero + escaneo opcional) ────────────────────
-#
-# Flujo:
-#   1. Muestra dispositivos ya pareados (conexión inmediata sin escanear)
-#   2. Opción [S] para lanzar escaneo en vivo y descubrir nuevos
-#   3. Selección múltiple en ambos casos
+# ── Acción: Conectar (escaneo en vivo + selección sin parar el escaneo) ───────
 
 def action_connect():
     if not bt_is_on():
         print(f"\n  {R}Bluetooth apagado. Actívalo primero con: bluetoothctl power on{RST}")
         sleep(3); return
 
-    # ── Fase 1: pareados disponibles ──────────────────────────────────────
-    paired        = paired_devices()
-    connected_macs = set(connected_devices())
-    not_connected = {m: n for m, n in paired.items() if m not in connected_macs}
-
-    clr(); print(HEADER, end='')
-    print(f"  {C}{B}CONECTAR DISPOSITIVO{RST}\n")
-
-    if paired:
-        print(f"  {G}Dispositivos pareados:{RST}\n")
-        order = list(paired.keys())
-        print_numbered_list(paired, order, set(paired), connected_macs)
-        print()
-        if not_connected:
-            print(f"  {G}Número(s) para reconectar, {Y}S{G} para escanear nuevos, {Y}0{G} para cancelar{RST}")
-        else:
-            print(f"  {G}Todos ya conectados. {Y}S{G} para buscar nuevos, {Y}0{G} para cancelar{RST}")
-    else:
-        order = []
-        print(f"  {G}No hay dispositivos pareados. {Y}S{G} para escanear, {Y}0{G} para cancelar{RST}")
-
-    print()
-    try:
-        sel = input(f"  {R}> {RST}").strip()
-    except (KeyboardInterrupt, EOFError):
-        return
-
-    if not sel or sel == '0':
-        return
-
-    # ── Fase 1b: selección directa de un pareado ──────────────────────────
-    if sel.lower() != 's':
-        indices = []
-        for tok in sel.split():
-            try:
-                n = int(tok)
-                if 1 <= n <= len(order):
-                    indices.append(n - 1)
-            except ValueError:
-                pass
-        for idx in indices:
-            mac  = order[idx]
-            name = paired[mac]
-            if mac in connected_macs:
-                print(f"\n  {C}{name}{RST} ya está conectado.")
-                sleep(1)
-            else:
-                _do_connect(mac, name, already_paired=True)
-        return
-
-    # ── Fase 2: escaneo en vivo ───────────────────────────────────────────
-    devs  = all_devices()
-    scan_order = list(devs.keys())
-    stop  = threading.Event()
-    paired_macs = set(paired)
+    # Pre-computar estado para tags (no hacen queries durante el loop)
+    paired_macs    = set(paired_devices())
     connected_macs = set(connected_devices())
 
-    start_scan(devs, scan_order, stop)
+    # Pre-poblar: pareados primero (reconexión inmediata), luego el resto
+    devs  = {}   # mac -> name  (dict preserva orden de inserción)
+    order = []   # lista de MACs en orden estable
+    for mac, name in paired_devices().items():
+        devs[mac] = name;  order.append(mac)
+    for mac, name in all_devices().items():
+        if mac not in devs:
+            devs[mac] = name;  order.append(mac)
+
+    stop = threading.Event()
+    start_scan(devs, order, stop)
 
     clr(); print(HEADER, end='')
-    print(f"  {C}{B}CONECTAR — ESCANEO EN VIVO{RST}")
-    print(f"  {G}Presiona {Y}Enter{G} para detener y seleccionar{RST}\n")
+    print(f"  {C}{B}CONECTAR DISPOSITIVO — ESCANEO EN VIVO{RST}")
+    print(f"  {G}Escribe el número y pulsa {Y}Enter{G} · {Y}N{G}/{Y}P{G}=páginas · {Y}Esc{G}=salir{RST}\n")
     cursor_save()
     cursor_hide()
 
-    si = 0
+    page     = 0
+    buf      = ''
+    si       = 0
+    selected = None    # (mac, name) cuando el usuario confirma
+
     try:
-        while True:
+        while selected is None:
+
+            # Snapshot del estado actual (el thread puede estar escribiendo en devs/order)
+            snap_order = list(order)
+            snap_devs  = dict(devs)
+            total      = len(snap_order)
+
+            total_pages = max(1, (total + PAGE_SIZE - 1) // PAGE_SIZE)
+            page        = min(page, max(0, total_pages - 1))
+            start_idx   = page * PAGE_SIZE
+            page_macs   = snap_order[start_idx : start_idx + PAGE_SIZE]
+
+            # ── Redibujar zona dinámica ────────────────────────────────────
             cursor_restore(); erase_down()
-            print_live_list(devs, scan_order, SPIN[si], paired_macs, connected_macs)
-            si = (si + 1) % len(SPIN)
-            if getch() is not None:
+
+            spin = SPIN[si]; si = (si + 1) % len(SPIN)
+            pg_info = f"  {G}│  Pág. {C}{page+1}{G}/{C}{total_pages}{RST}" if total_pages > 1 else ''
+            if total:
+                print(f"  {G}Encontrados: {C}{total}{RST}  {spin}{pg_info}\n")
+            else:
+                print(f"  {G}Buscando... {C}{spin}{RST}\n")
+
+            # Filas de dispositivos — siempre PAGE_SIZE líneas (altura fija)
+            for row in range(PAGE_SIZE):
+                if row < len(page_macs):
+                    mac  = page_macs[row]
+                    num  = start_idx + row + 1
+                    name = snap_devs.get(mac, mac)
+                    tags = ''
+                    if mac in connected_macs: tags += f"{C}●{RST}"
+                    if mac in paired_macs:    tags += f"{Y}★{RST}"
+                    hi    = buf and str(num).startswith(buf)
+                    num_c = f"{Y}[{num:2d}]{RST}" if hi else f"{C}[{num:2d}]{RST}"
+                    print(f"  {num_c}  {G}{mac}{RST}  {Y}{name:<26}{RST} {tags}")
+                else:
+                    print()    # línea vacía → altura constante
+
+            # Separador + leyenda + prompt
+            print(f"\n  {R}{'─' * 46}{RST}")
+            legend = f"  {C}●{RST}conectado  {Y}★{RST}pareado"
+            if total_pages > 1:
+                legend += f"  {Y}N{RST}=sig.  {Y}P{RST}=ant."
+            print(legend)
+            buf_disp = f"{Y}{buf}{RST}" if buf else ''
+            print(f"\n  {R}>{RST} {buf_disp}\033[K", end='', flush=True)
+
+            # ── Leer tecla sin bloquear ────────────────────────────────────
+            key = getch(0.35)
+            if key is None:
+                continue
+
+            if key in ('\r', '\n'):              # Enter → conectar
+                if buf:
+                    try:
+                        n = int(buf)
+                        if 1 <= n <= total:
+                            mac = snap_order[n - 1]
+                            selected = (mac, snap_devs.get(mac, mac))
+                    except ValueError:
+                        pass
+                    buf = ''
+
+            elif key in ('\x7f', '\x08'):        # Backspace
+                buf = buf[:-1]
+
+            elif key.isdigit():                  # Dígito → acumular
+                buf += key
+
+            elif key.lower() == 'n':             # Siguiente página
+                page = min(page + 1, total_pages - 1)
+                buf  = ''
+
+            elif key.lower() == 'p':             # Página anterior
+                page = max(page - 1, 0)
+                buf  = ''
+
+            elif key == '\x1b':                  # Esc → salir
                 break
+
     except KeyboardInterrupt:
-        cursor_show(); stop.set(); return
+        pass
     finally:
         cursor_show()
         stop.set()
 
-    if not scan_order:
-        print(f"\n  {Y}No se encontraron dispositivos.{RST}")
-        sleep(2); return
+    if selected is None:
+        return
 
-    paired_macs    = set(paired_devices())
-    connected_macs = set(connected_devices())
-
-    print(f"\n\n  {C}Selecciona dispositivo(s) — número(s) separados por espacio:{RST}\n")
-    print_numbered_list(devs, scan_order, paired_macs, connected_macs)
-    print()
-
-    indices = pick_numbers("Número(s) (0 = cancelar)", len(scan_order))
-    for idx in indices:
-        mac  = scan_order[idx]
-        name = devs.get(mac, mac)
-        _do_connect(mac, name, already_paired=(mac in paired_macs))
+    mac, name = selected
+    print('\n')
+    _do_connect(mac, name, already_paired=(mac in paired_macs))
 
 # ── Acción: Desconectar ───────────────────────────────────────────────────────
 
