@@ -4,10 +4,10 @@
 
 CLASS="sidepad-terminal"
 STATE_FILE="/tmp/sidepad-visible"
-WIDTH=550
+WIDTH=650
 VISIBLE_GAP=20    # px desde el borde izquierdo al mostrarse
 TOP_GAP=60        # px desde arriba (deja espacio para waybar)
-BOTTOM_GAP=50
+BOTTOM_GAP=20
 
 # ── Kill mode ────────────────────────────────────────────────
 if [ "$1" = "--kill" ]; then
