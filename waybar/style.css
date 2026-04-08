@@ -43,14 +43,15 @@ window#waybar.hidden {
 
 #workspaces button {
   transition: none;
-  color: #ff6666;
+  color: #ff9999;
   background: transparent;
   margin-right: 1px;
+  font-weight: bold;
 }
 
 #workspaces button.persistent {
   transition: none;
-  color: #660000;
+  color: #990000;
   background: transparent;
   font-size: 1px;
 }
@@ -64,8 +65,10 @@ window#waybar.hidden {
 
 #workspaces button.active {
   color: #fcee0a;
-  background: transparent;
-  font-size: 2px;
+  background: linear-gradient(135deg, transparent 6px, #2b0000 6px);
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0 6px;
   animation-name: blink-workspace;
   animation-duration: 0.8s;
   animation-timing-function: linear;
@@ -75,7 +78,7 @@ window#waybar.hidden {
 
 @keyframes blink-workspace {
   from { color: #fcee0a; }
-  to   { color: #7a6e00; }
+  to   { color: #a89800; }
 }
 
 /* ── Módulos base ────────────────────────────────────── */
