@@ -65,7 +65,7 @@ window#waybar.hidden {
 
 #workspaces button.active {
   color: #fcee0a;
-  background: linear-gradient(135deg, transparent 6px, #2b0000 6px);
+  background: linear-gradient(135deg, transparent 6px, #1A0000 6px);
   font-size: 14px;
   font-weight: bold;
   padding: 0 6px;

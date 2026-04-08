@@ -82,7 +82,8 @@ blankwindow {
     linear-gradient(135deg, transparent 8px, #0a0000 8px) top    / 100% 51% no-repeat,
     linear-gradient(315deg, transparent 8px, #0a0000 8px) bottom / 100% 51% no-repeat;
   border-bottom-color: #00cfff;
-  box-shadow: 0 4px 12px rgba(0, 207, 255, 0.5), 0 1px 0 #00cfff;
+  border-left: 3px solid #00cfff;
+  box-shadow: 0 4px 12px rgba(0, 207, 255, 0.3), 0 1px 0 #00cfff;
 }
 
 .notification-row .notification-background .notification.normal {
@@ -90,15 +91,17 @@ blankwindow {
     linear-gradient(135deg, transparent 8px, #1a0000 8px) top    / 100% 51% no-repeat,
     linear-gradient(315deg, transparent 8px, #1a0000 8px) bottom / 100% 51% no-repeat;
   border-bottom-color: #fcee0a;
-  box-shadow: 0 4px 12px rgba(252, 238, 10, 0.5), 0 1px 0 #fcee0a;
+  border-left: 3px solid #fcee0a;
+  box-shadow: 0 4px 12px rgba(252, 238, 10, 0.3), 0 1px 0 #fcee0a;
 }
 
 .notification-row .notification-background .notification.critical {
   background:
-    linear-gradient(135deg, transparent 8px, #ff003c 8px) top    / 100% 51% no-repeat,
-    linear-gradient(315deg, transparent 8px, #ff003c 8px) bottom / 100% 51% no-repeat;
+    linear-gradient(135deg, transparent 8px, #2a0010 8px) top    / 100% 51% no-repeat,
+    linear-gradient(315deg, transparent 8px, #2a0010 8px) bottom / 100% 51% no-repeat;
   border-bottom-color: #ff003c;
-  box-shadow: 0 4px 16px rgba(255, 0, 60, 0.8), 0 1px 0 #ff003c;
+  border-left: 4px solid #ff003c;
+  box-shadow: 0 4px 16px rgba(255, 0, 60, 0.6), 0 1px 0 #ff003c;
   animation: blink-critical 0.5s linear infinite alternate;
 }
 
@@ -113,7 +116,7 @@ blankwindow {
 
 /* ── Acción por defecto (cuerpo de la notificación) ───────── */
 .notification-default-action {
-  padding: 4px;
+  padding: 10px 12px;
   margin: 0;
   box-shadow: none;
   background: transparent;
@@ -137,7 +140,7 @@ blankwindow {
 .notification-content {
   background: transparent;
   border-radius: 0;
-  padding: 0;
+  padding: 2px 4px;
 }
 
 .notification-content .image {
@@ -149,9 +152,9 @@ blankwindow {
 
 .notification-content .app-icon {
   -gtk-icon-filter: none;
-  -gtk-icon-size: 21px;
+  -gtk-icon-size: 28px;
   -gtk-icon-shadow: 0 1px 4px black;
-  margin: 6px;
+  margin: 8px 10px;
 }
 
 .notification-content .text-box label {
@@ -159,28 +162,31 @@ blankwindow {
 }
 
 .notification-content .text-box .summary {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: bold;
-  color: #ff003c;
+  color: #ff8888;
   background: transparent;
   text-shadow: none;
+  margin-bottom: 2px;
 }
 
 .notification-content .text-box .time {
-  font-size: 13px;
-  font-weight: bold;
-  color: #fcee0a;
+  font-size: 11px;
+  font-weight: normal;
+  color: #a89800;
   background: transparent;
   text-shadow: none;
-  margin-right: 30px;
+  margin-left: auto;
+  margin-top: 2px;
 }
 
 .notification-content .text-box .body {
   font-size: 13px;
   font-weight: normal;
-  color: #ffcccc;
+  color: #e8aaaa;
   background: transparent;
   text-shadow: none;
+  margin-top: 3px;
 }
 
 /* Barra de progreso */
