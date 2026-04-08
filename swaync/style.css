@@ -36,8 +36,8 @@ blankwindow {
   border-radius: 0;
   /* corte sup-izq + inf-der: cada capa cubre mitad del alto */
   background:
-    linear-gradient(135deg, transparent 10px, #0a0000 10px) top    / 100% 51% no-repeat,
-    linear-gradient(315deg, transparent 10px, #0a0000 10px) bottom / 100% 51% no-repeat;
+    linear-gradient(135deg, transparent 10px, #0a0000 10px) top    / 100% 100% no-repeat;
+    /*linear-gradient(315deg, transparent 10px, #0a0000 10px) bottom / 100% 51% no-repeat;*/
 }
 
 .control-center .control-center-list-placeholder {
@@ -66,8 +66,8 @@ blankwindow {
 /* Notificación base — corte sup-izq + inf-der, borde inferior brillante */
 .notification-row .notification-background .notification {
   background:
-    linear-gradient(135deg, transparent 8px, #1a0000 8px) top    / 100% 51% no-repeat,
-    linear-gradient(315deg, transparent 8px, #1a0000 8px) bottom / 100% 51% no-repeat;
+    linear-gradient(135deg, transparent 8px, #1a0000 8px) top    / 100% 100% no-repeat;
+    /*linear-gradient(315deg, transparent 8px, #1a0000 8px) bottom / 100% 51% no-repeat;*/
   border: none;
   border-bottom: 1px solid #ff003c;
   border-radius: 0;
@@ -79,8 +79,8 @@ blankwindow {
 /* Urgencias */
 .notification-row .notification-background .notification.low {
   background:
-    linear-gradient(135deg, transparent 8px, #0a0000 8px) top    / 100% 51% no-repeat,
-    linear-gradient(315deg, transparent 8px, #0a0000 8px) bottom / 100% 51% no-repeat;
+    linear-gradient(135deg, transparent 8px, #0a0000 8px) top    / 100% 100% no-repeat;
+    /*linear-gradient(315deg, transparent 8px, #0a0000 8px) bottom / 100% 51% no-repeat;*/
   border-bottom-color: #00cfff;
   border-left: 3px solid #00cfff;
   box-shadow: 0 4px 12px rgba(0, 207, 255, 0.3), 0 1px 0 #00cfff;
@@ -88,8 +88,8 @@ blankwindow {
 
 .notification-row .notification-background .notification.normal {
   background:
-    linear-gradient(135deg, transparent 8px, #1a0000 8px) top    / 100% 51% no-repeat,
-    linear-gradient(315deg, transparent 8px, #1a0000 8px) bottom / 100% 51% no-repeat;
+    linear-gradient(135deg, transparent 8px, #1a0000 8px) top    / 100% 100% no-repeat;
+    /*linear-gradient(315deg, transparent 8px, #1a0000 8px) bottom / 100% 51% no-repeat*/
   border-bottom-color: #fcee0a;
   border-left: 3px solid #fcee0a;
   box-shadow: 0 4px 12px rgba(252, 238, 10, 0.3), 0 1px 0 #fcee0a;
@@ -97,8 +97,8 @@ blankwindow {
 
 .notification-row .notification-background .notification.critical {
   background:
-    linear-gradient(135deg, transparent 8px, #2a0010 8px) top    / 100% 51% no-repeat,
-    linear-gradient(315deg, transparent 8px, #2a0010 8px) bottom / 100% 51% no-repeat;
+    linear-gradient(135deg, transparent 8px, #2a0010 8px) top    / 100% 100% no-repeat;
+    /*linear-gradient(315deg, transparent 8px, #2a0010 8px) bottom / 100% 51% no-repeat;*/
   border-bottom-color: #ff003c;
   border-left: 4px solid #ff003c;
   box-shadow: 0 4px 16px rgba(255, 0, 60, 0.6), 0 1px 0 #ff003c;
@@ -108,8 +108,8 @@ blankwindow {
 @keyframes blink-critical {
   to {
     background:
-      linear-gradient(135deg, transparent 8px, #660000 8px) top    / 100% 51% no-repeat,
-      linear-gradient(315deg, transparent 8px, #660000 8px) bottom / 100% 51% no-repeat;
+      linear-gradient(135deg, transparent 8px, #660000 8px) top    / 100% 100% no-repeat;
+      /*linear-gradient(315deg, transparent 8px, #660000 8px) bottom / 100% 51% no-repeat;*/
     box-shadow: 0 4px 8px rgba(255, 0, 60, 0.3), 0 1px 0 #660000;
   }
 }
@@ -345,12 +345,12 @@ blankwindow {
   border-radius: 0;
   
   background:
-    linear-gradient(135deg, transparent 8px, #1a0000 8px) top    / 100% 51% no-repeat,
-    linear-gradient(315deg, transparent 8px, #1a0000 8px) bottom / 100% 51% no-repeat;
+    linear-gradient(135deg, transparent 8px, #1a0000 8px) top    / 100% 100% no-repeat;
+    /*linear-gradient(180deg, transparent 8px, #1a0000 8px) bottom / 100% 51% no-repeat;*/
   
   border: none;
   border-bottom: 1px solid transparent;
-  border-image: linear-gradient(to right, #80001e 375px, transparent 300px) 0 0 1 0;
+  border-image: linear-gradient(to right, #80001e 400px, transparent 300px) 0 0 1 0;
   color: #ffcccc;
 }
 
