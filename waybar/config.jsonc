@@ -101,9 +101,12 @@
    "mpris": {
         "player": "spotify",
         "dynamic-order": ["title", "artist"],
-        "format": "{status_icon}",
+        "format": "{status_icon} ⏭",
+        "format-paused": "{status_icon}",
+        "format-stopped": "",
         "dynamic-len": 28,
         "tooltip-format": "{title}\n{artist}\n{album}",
+        "on-click-right": "playerctl next --player spotify",
         "status-icons": {
                 "playing": "⏸",
                 "paused":  "▶",
