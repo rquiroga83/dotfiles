@@ -108,6 +108,9 @@ PKGS_PACMAN=(
     # Gestor de archivos
     ranger
 
+    # ls moderno
+    lsd
+
     # Utilidades
     python
     libnotify
@@ -166,6 +169,7 @@ link_config kitty
 link_config rofi
 link_config swaync
 link_config ranger
+link_config lsd
 
 # ── Scripts ejecutables ───────────────────────────────────────
 section "Permisos de scripts"
