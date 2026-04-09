@@ -81,6 +81,34 @@ window#waybar.hidden {
   to   { color: #a89800; }
 }
 
+/* ── Taskbar ─────────────────────────────────────────── */
+#taskbar {
+  margin: 5px 4px;
+  background: linear-gradient(135deg, transparent 8px, #1a0000 8px);
+  padding: 0 6px;
+}
+
+#taskbar button {
+  background: transparent;
+  padding: 2px 4px;
+  margin: 0 1px;
+  border-radius: 0;
+  transition: background 0.15s ease-in-out;
+}
+
+#taskbar button:hover {
+  background: linear-gradient(135deg, transparent 6px, #2b0000 6px);
+}
+
+#taskbar button.active {
+  background: linear-gradient(135deg, transparent 6px, #2b0000 6px);
+  border-bottom: 2px solid #ff003c;
+}
+
+#taskbar button.minimized {
+  opacity: 0.5;
+}
+
 /* ── Módulos base ────────────────────────────────────── */
 #bluetooth,
 #network,

@@ -20,7 +20,7 @@
   //"modules-left": ["custom/launcher", "hyprland/workspaces", "mpris"],
   //"modules-center": ["cpu","temperature","memory","disk"],
   //"modules-right":["cava","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
-  "modules-left": ["custom/launcher", "hyprland/workspaces", "mpris", "cava"],
+  "modules-left": ["custom/launcher", "hyprland/workspaces", "wlr/taskbar", "mpris", "cava"],
   "modules-center": [],
   "modules-right":["cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
 
@@ -64,9 +64,7 @@
 		"4": [],
 		"5": [],
 		"6": [],
-	  "7": [],
-	  "8": [],
-	  "9": []
+	  "7": []
         },
         "format": "{icon}",
         "format-icons": {
@@ -79,6 +77,16 @@
        }
    },
 
+
+  "wlr/taskbar": {
+    "format": "{icon}",
+    "icon-size": 18,
+    "spacing": 4,
+    "tooltip-format": "{title}",
+    "on-click": "activate",
+    "on-click-middle": "close",
+    "ignore-list": ["btmenu", "wifimenu", "sidepad-terminal"]
+  },
 
    "hyprland/window" : {
         "format" : " {}",
@@ -109,7 +117,7 @@
 		"framerate": 60,
 		"autosens": 0,
 		"sensitivity": 1.5,
-		"bars": 16,
+		"bars": 8,
 		"lower_cutoff_freq": 40,
 		"higher_cutoff_freq": 16000,
 		"method": "pulse",
