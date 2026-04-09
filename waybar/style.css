@@ -6,9 +6,6 @@
   min-height: 10px;
 }
 
-window {
-
-}
 
 window#waybar {
   background:
@@ -107,6 +104,26 @@ window#waybar.hidden {
 
 #taskbar button.minimized {
   opacity: 0.5;
+}
+
+/* ── Privacy ─────────────────────────────────────────── */
+#privacy {
+  margin: 5px 4px;
+  padding: 0 6px;
+}
+
+#privacy-item {
+  background: transparent;
+  padding: 0 4px;
+  margin: 0 2px;
+}
+
+#privacy-item.screenshare {
+  color: #fcee0a;
+}
+
+#privacy-item.audio-in {
+  color: #ff003c;
 }
 
 /* ── Módulos base ────────────────────────────────────── */
