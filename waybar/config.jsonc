@@ -22,7 +22,7 @@
   //"modules-right":["cava","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
   "modules-left": ["custom/launcher", "hyprland/workspaces", "wlr/taskbar", "mpris", "cava"],
   "modules-center": [],
-  "modules-right":["privacy","cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
+  "modules-right":["privacy","cpu","temperature","custom/udiskie","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
 
   // Modules Definition
   "custom/launcher" : {
@@ -212,6 +212,14 @@
         "tooltip-icon-size": 18
       }
     ]
+  },
+
+  "custom/udiskie": {
+    "exec": "~/dotfiles/util/udiskie/udisks-status.sh",
+    "return-type": "json",
+    "interval": 3,
+    "tooltip": true,
+    "on-click": "~/dotfiles/util/udiskie/udisks-eject.sh"
   },
 
    "bluetooth": {
