@@ -1,0 +1,84 @@
+# ~/.config/yazi/keymap.toml
+# Usa prepend_keymap para agregar sin pisar los defaults
+
+# ─── Manager (navegador de archivos) ──────────────────────────────────────
+
+[[mgr.prepend_keymap]]
+on  = "e"
+run = "open --interactive"
+desc = "Abrir con selector interactivo"
+
+[[mgr.prepend_keymap]]
+on  = "<C-e>"
+run = 'shell --block --confirm "nvim \"$@\""'
+desc = "Editar con Neovim"
+
+# Copiar ruta absoluta del archivo al portapapeles (Wayland)
+[[mgr.prepend_keymap]]
+on  = ["cp"]
+run = 'shell --confirm "echo -n \"$@\" | wl-copy"'
+desc = "Copiar ruta al portapapeles"
+
+# Copiar nombre de archivo al portapapeles
+[[mgr.prepend_keymap]]
+on  = ["cn"]
+run = 'shell --confirm "basename \"$@\" | tr -d \"\\n\" | wl-copy"'
+desc = "Copiar nombre al portapapeles"
+
+# Buscar archivos con fzf y saltar al resultado
+[[mgr.prepend_keymap]]
+on  = "<C-f>"
+run = "plugin fzf"
+desc = "Buscar con fzf"
+
+# Saltar a directorio con zoxide
+[[mgr.prepend_keymap]]
+on  = "Z"
+run = "plugin zoxide"
+desc = "Saltar con zoxide"
+
+# Mostrar/ocultar archivos ocultos
+[[mgr.prepend_keymap]]
+on  = "."
+run = "hidden toggle"
+desc = "Mostrar/ocultar archivos ocultos"
+
+# Crear archivo nuevo
+[[mgr.prepend_keymap]]
+on  = ["a", "f"]
+run = 'create --dir=false'
+desc = "Crear archivo"
+
+# Crear directorio nuevo
+[[mgr.prepend_keymap]]
+on  = ["a", "d"]
+run = 'create --dir=true'
+desc = "Crear directorio"
+
+# Renombrar (modo batch para múltiples)
+[[mgr.prepend_keymap]]
+on  = "R"
+run = "rename --hovered"
+desc = "Renombrar archivo"
+
+# Borrar a la papelera (trash-cli)
+[[mgr.prepend_keymap]]
+on  = "D"
+run = 'shell --confirm "trash-put \"$@\""'
+desc = "Mover a papelera"
+
+# Ordenar por nombre / tamaño / fecha
+[[mgr.prepend_keymap]]
+on  = ["s", "n"]
+run = "sort natural --dir-first"
+desc = "Ordenar por nombre"
+
+[[mgr.prepend_keymap]]
+on  = ["s", "s"]
+run = "sort size --reverse --dir-first"
+desc = "Ordenar por tamaño (mayor primero)"
+
+[[mgr.prepend_keymap]]
+on  = ["s", "m"]
+run = "sort modified --reverse --dir-first"
+desc = "Ordenar por fecha (más reciente primero)"

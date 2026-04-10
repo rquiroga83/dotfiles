@@ -1,0 +1,81 @@
+# ~/.config/yazi/theme.toml — Cyberpunk Red
+
+[flavor]
+# Sin flavor externo, definimos colores manualmente
+
+# ─── Fondo de terminal ─────────────────────────────────────────────────────
+[manager]
+cwd = { fg = "#00cfff", bold = true }
+
+# Hovered (cursor sobre archivo)
+hovered         = { fg = "#0a0000", bg = "#ff003c", bold = true }
+preview_hovered = { underline = true }
+
+# Marcados (seleccionados con espacio)
+marker_selected = { fg = "#fcee0a", bg = "#fcee0a" }
+marker_copied   = { fg = "#00cfff", bg = "#00cfff" }
+marker_cut      = { fg = "#ff003c", bg = "#ff003c" }
+
+# Bordes del panel de preview
+border_symbol = "│"
+border_style  = { fg = "#ff003c" }
+
+# ─── Barra de estado ───────────────────────────────────────────────────────
+[status]
+sep_left  = { open = "", close = "" }
+sep_right = { open = "", close = "" }
+
+# Fondo general de la barra (fuerza bg oscuro en toda la barra)
+overall = { fg = "#ffcccc", bg = "#1a0000" }
+
+# Permisos
+perm_type  = { fg = "#00cfff",  bg = "#1a0000" }
+perm_read  = { fg = "#fcee0a",  bg = "#1a0000" }
+perm_write = { fg = "#ff003c",  bg = "#1a0000" }
+perm_exec  = { fg = "#00cfff",  bg = "#1a0000", bold = true }
+perm_sep   = { fg = "#2b0000",  bg = "#1a0000" }
+
+# Progreso de operaciones
+progress_label  = { fg = "#ffcccc", bg = "#1a0000", bold = true }
+progress_normal = { fg = "#00cfff", bg = "#1a0000" }
+progress_error  = { fg = "#ff003c", bg = "#1a0000" }
+
+# ─── Tabs ──────────────────────────────────────────────────────────────────
+[tab]
+active   = { fg = "#0a0000", bg = "#ff003c", bold = true }
+inactive = { fg = "#ffcccc", bg = "#1a0000" }
+
+# ─── Tipos de archivo (colores según tipo) ─────────────────────────────────
+[filetype]
+rules = [
+  # Ejecutables → cyan
+  { mime = "application/x-executable",     style = { fg = "#00cfff", bold = true } },
+  { mime = "application/x-sharedlib",      style = { fg = "#00cfff" } },
+
+  # Scripts → amarillo
+  { mime = "application/x-sh",             style = { fg = "#fcee0a" } },
+  { mime = "text/x-python",                style = { fg = "#fcee0a" } },
+  { mime = "text/x-shellscript",           style = { fg = "#fcee0a" } },
+
+  # Imágenes → rojo neón
+  { mime = "image/*",                       style = { fg = "#ff003c" } },
+
+  # Video / audio → rojo suave
+  { mime = "video/*",                       style = { fg = "#ff003c", bold = true } },
+  { mime = "audio/*",                       style = { fg = "#ff003c" } },
+
+  # PDF / documentos → amarillo
+  { mime = "application/pdf",              style = { fg = "#fcee0a", bold = true } },
+
+  # Archivos comprimidos → cyan
+  { mime = "application/zip",              style = { fg = "#00cfff" } },
+  { mime = "application/x-tar",            style = { fg = "#00cfff" } },
+  { mime = "application/x-7z-compressed",  style = { fg = "#00cfff" } },
+  { mime = "application/gzip",             style = { fg = "#00cfff" } },
+
+  # Directorios → rojo neón (manejado por yazi automáticamente, pero por si acaso)
+  { name = "*/", style = { fg = "#ff003c", bold = true } },
+
+  # Archivos ocultos → gris suave
+  { name = ".*", style = { fg = "#555555" } },
+]

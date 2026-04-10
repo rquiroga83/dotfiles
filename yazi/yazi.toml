@@ -1,0 +1,98 @@
+# ~/.config/yazi/yazi.toml
+
+[manager]
+ratio          = [1, 3, 4]   # proporciones panel izquierdo / central / preview
+sort_by        = "natural"   # ordenación natural (ej. file2 antes de file10)
+sort_sensitive = false
+sort_reverse   = false
+sort_dir_first = true        # directorios primero
+linemode       = "size"      # mostrar tamaño en cada línea
+show_hidden    = false       # toggle con (.) en runtime
+show_symlink   = true
+
+[preview]
+tab_size     = 2
+max_width    = 1200
+max_height   = 900
+cache_dir    = ""            # usa el default de sistema
+image_filter = "lanczos3"
+image_quality = 85
+
+# ─── Openers ───────────────────────────────────────────────────────────────
+
+[opener]
+
+# Texto / código → Neovim (bloquea yazi hasta salir)
+edit = [
+  { run = 'nvim "$@"', desc = "Neovim", block = true, for = "unix" }
+]
+
+# PDF → Zathura
+pdf = [
+  { run = 'zathura "$@"', desc = "Zathura", orphan = true, for = "unix" }
+]
+
+# Imágenes → imv (visor ligero Wayland) con feh como fallback
+image = [
+  { run = 'imv "$@"', desc = "imv",          orphan = true, for = "unix" },
+  { run = 'feh "$@"', desc = "feh (fallback)", orphan = true, for = "unix" }
+]
+
+# Video → mpv
+video = [
+  { run = 'mpv "$@"', desc = "mpv", orphan = true, for = "unix" }
+]
+
+# Audio → mpv (sin ventana)
+audio = [
+  { run = 'mpv --no-video "$@"', desc = "mpv (audio)", orphan = true, for = "unix" }
+]
+
+# Archivos comprimidos → extraer en directorio actual
+extract = [
+  { run = 'unar "$@"', desc = "unar (extraer aquí)", block = true, for = "unix" }
+]
+
+# Fallback genérico → xdg-open
+open = [
+  { run = 'xdg-open "$@"', desc = "xdg-open", orphan = true, for = "unix" }
+]
+
+# ─── Reglas de apertura ────────────────────────────────────────────────────
+
+[open]
+rules = [
+  # PDF
+  { mime = "application/pdf", use = ["pdf", "edit"] },
+
+  # Imágenes
+  { mime = "image/*", use = ["image", "edit"] },
+
+  # Video
+  { mime = "video/*", use = ["video"] },
+
+  # Audio
+  { mime = "audio/*", use = ["audio"] },
+
+  # Archivos comprimidos
+  { mime = "application/zip",              use = ["extract", "open"] },
+  { mime = "application/x-tar",            use = ["extract", "open"] },
+  { mime = "application/x-bzip2",          use = ["extract", "open"] },
+  { mime = "application/x-7z-compressed",  use = ["extract", "open"] },
+  { mime = "application/x-rar",            use = ["extract", "open"] },
+  { mime = "application/gzip",             use = ["extract", "open"] },
+  { mime = "application/zstd",             use = ["extract", "open"] },
+
+  # Texto / código
+  { mime = "text/*",             use = ["edit"] },
+  { mime = "application/json",   use = ["edit"] },
+  { mime = "application/xml",    use = ["edit"] },
+  { mime = "application/x-sh",   use = ["edit"] },
+  { mime = "inode/x-empty",      use = ["edit"] },
+
+  # SVG (es imagen pero también editable)
+  { mime = "image/svg+xml", use = ["image", "edit"] },
+
+  # Fallback
+  { name = "*", use = ["open", "edit"] },
+]
