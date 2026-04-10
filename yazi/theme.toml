@@ -20,20 +20,33 @@ marker_cut      = { fg = "#ff003c", bg = "#ff003c" }
 border_symbol = "│"
 border_style  = { fg = "#ff003c" }
 
+# ─── Modo (píldora izquierda: NOR / SEL) ──────────────────────────────────
+[mode]
+# normal_main = píldora principal, normal_alt = sección secundaria contigua
+normal_main = { fg = "#0a0000", bg = "#ff003c", bold = true }
+normal_alt  = { fg = "#ff003c", bg = "#2b0000" }
+select_main = { fg = "#0a0000", bg = "#00cfff", bold = true }
+select_alt  = { fg = "#00cfff", bg = "#002b2b" }
+unset_main  = { fg = "#0a0000", bg = "#555555", bold = true }
+unset_alt   = { fg = "#aaaaaa", bg = "#1a1a1a" }
+
 # ─── Barra de estado ───────────────────────────────────────────────────────
 [status]
+# Separadores Powerline que forman la forma de píldora
+#  = U+E0B0 (triángulo derecho lleno) — cierra la píldora izquierda
+#  = U+E0B2 (triángulo izquierdo lleno) — abre la píldora derecha
 sep_left  = { open = "", close = "" }
 sep_right = { open = "", close = "" }
 
-# Fondo general de la barra (fuerza bg oscuro en toda la barra)
+# Fondo general de la barra
 overall = { fg = "#ffcccc", bg = "#1a0000" }
 
 # Permisos
-perm_type  = { fg = "#00cfff",  bg = "#1a0000" }
-perm_read  = { fg = "#fcee0a",  bg = "#1a0000" }
-perm_write = { fg = "#ff003c",  bg = "#1a0000" }
-perm_exec  = { fg = "#00cfff",  bg = "#1a0000", bold = true }
-perm_sep   = { fg = "#2b0000",  bg = "#1a0000" }
+perm_type  = { fg = "#00cfff", bg = "#1a0000" }
+perm_read  = { fg = "#fcee0a", bg = "#1a0000" }
+perm_write = { fg = "#ff003c", bg = "#1a0000" }
+perm_exec  = { fg = "#00cfff", bg = "#1a0000", bold = true }
+perm_sep   = { fg = "#2b0000", bg = "#1a0000" }
 
 # Progreso de operaciones
 progress_label  = { fg = "#ffcccc", bg = "#1a0000", bold = true }
