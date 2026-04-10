@@ -21,8 +21,8 @@
   //"modules-center": ["cpu","temperature","memory","disk"],
   //"modules-right":["cava","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
   "modules-left": ["custom/launcher", "hyprland/workspaces", "wlr/taskbar", "mpris", "cava"],
-  "modules-center": [],
-  "modules-right":["custom/udiskie","privacy","cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
+  "modules-center": ["privacy","custom/udiskie"],
+  "modules-right":["cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
 
   // Modules Definition
   "custom/launcher" : {
@@ -200,6 +200,9 @@
     "icon-size": 14,
     "icon-spacing": 6,
     "transition-duration": 250,
+    "ignore": [
+      { "type": "audio-in", "name": "cava" }
+    ],
     "modules": [
       {
         "type": "screenshare",
