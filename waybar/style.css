@@ -328,3 +328,12 @@ menuitem:hover {
 menuitem * {
   color: inherit;
 }
+
+
+/* udiskie — icono unidades */
+#custom-udiskie {
+  color: #555555;
+}
+#custom-udiskie.active {
+  color: #fcee0a;
+}

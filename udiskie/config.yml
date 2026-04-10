@@ -1,0 +1,5 @@
+program_options:
+  automount: true
+  notify: true
+  tray: true
+  file_manager: kitty --class yazi-fm yazi

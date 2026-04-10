@@ -1,38 +1,29 @@
 #!/bin/bash
-# Lista unidades montadas y permite expulsarlas con rofi
+# Lista unidades bajo /run/media y permite expulsarlas con rofi
 
-MOUNTS=$(lsblk -o NAME,MOUNTPOINT,LABEL,SIZE,TRAN -J 2>/dev/null | \
-  python3 -c "
-import json, sys
-data = json.load(sys.stdin)
-results = []
-def walk(devices):
-    for d in devices:
-        mp = d.get('mountpoint', '')
-        if mp and '/run/media' in mp:
-            label = d.get('label') or d.get('name', '')
-            size  = d.get('size', '')
-            results.append(f\"{mp}  [{label}  {size}]\")
-        for child in d.get('children', []):
-            walk([child])
-walk(data.get('blockdevices', []))
-for r in results:
-    print(r)
-")
+DRIVES=$(lsblk -o NAME,MOUNTPOINT,LABEL,SIZE -rn 2>/dev/null | \
+  awk '$2 ~ /\/run\/media/ {
+    gsub(/\\x20/, " ", $3)
+    printf "/dev/%s\t%s\t%s\t%s\n", $1, $2, $3, $4
+  }')
 
-if [ -z "$MOUNTS" ]; then
+if [ -z "$DRIVES" ]; then
   notify-send "udiskie" "No hay unidades montadas" --icon=drive-removable-media
   exit 0
 fi
 
-SELECTED=$(echo "$MOUNTS" | rofi -dmenu -i -p "󰆼 Expulsar unidad" -theme-str '
-window { width: 500px; }
-')
+MENU=$(echo "$DRIVES" | awk -F'\t' '{
+  label = ($3 != "") ? $3 : $1
+  printf "%s  %s  (%s)\n", label, $4, $2
+}')
 
-[ -z "$SELECTED" ] && exit 0
+SELECTED_LINE=$(echo "$MENU" | rofi -dmenu -i -p "󰆼 Expulsar unidad" -format d)
 
-MOUNTPOINT=$(echo "$SELECTED" | awk '{print $1}')
+[ -z "$SELECTED_LINE" ] && exit 0
 
-udiskie-umount "$MOUNTPOINT" && \
-  notify-send "udiskie" "󰆼 Expulsada: $MOUNTPOINT" --icon=drive-removable-media || \
-  notify-send "udiskie" "Error al expulsar $MOUNTPOINT" --icon=dialog-error
+DEVICE=$(echo "$DRIVES" | sed -n "${SELECTED_LINE}p" | awk -F'\t' '{print $1}')
+LABEL=$(echo "$DRIVES"  | sed -n "${SELECTED_LINE}p" | awk -F'\t' '{label = ($3 != "") ? $3 : $1; print label}')
+
+udiskie-umount --detach "$DEVICE" && \
+  notify-send "udiskie" "󰆼 Expulsada: $LABEL" --icon=drive-removable-media || \
+  notify-send "udiskie" "Error al expulsar $LABEL" --icon=dialog-error

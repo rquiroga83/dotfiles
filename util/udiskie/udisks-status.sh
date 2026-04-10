@@ -1,12 +1,19 @@
 #!/bin/bash
-# Muestra unidades removibles montadas y permite expulsarlas con rofi
+# Detecta unidades montadas bajo /run/media (siempre son removibles)
 
-MOUNTS=$(udiskie-umount --list 2>/dev/null | grep -E "^\s+/run/media" | awk '{print $1}')
+DRIVES=$(lsblk -o NAME,MOUNTPOINT,LABEL -rn 2>/dev/null | \
+  awk '$2 ~ /\/run\/media/ {
+    label = ($3 != "") ? $3 : $1
+    gsub(/\\x20/, " ", label)
+    print label
+  }')
 
-COUNT=$(echo "$MOUNTS" | grep -c "/" 2>/dev/null || echo 0)
+COUNT=$(echo "$DRIVES" | grep -vc "^$")
+[ -z "$DRIVES" ] && COUNT=0
 
 if [ "$COUNT" -gt 0 ]; then
-  echo "{\"text\":\" $COUNT\", \"tooltip\":\"$COUNT unidad(es) montada(s)\", \"class\":\"active\"}"
+  NAMES=$(echo "$DRIVES" | paste -sd ", ")
+  echo "{\"text\":\"󰆼 $COUNT\", \"tooltip\":\"Montada(s):\\n$NAMES\", \"class\":\"active\"}"
 else
-  echo "{\"text\":\"\", \"tooltip\":\"Sin unidades montadas\", \"class\":\"empty\"}"
+  echo "{\"text\":\"󰆼\", \"tooltip\":\"Sin unidades montadas\", \"class\":\"empty\"}"
 fi
