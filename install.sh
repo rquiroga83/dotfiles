@@ -105,8 +105,13 @@ PKGS_PACMAN=(
     # Monitor de recursos
     btop
 
-    # Gestor de archivos
+    # Editor
+    neovim
+
+    # Gestores de archivos
+    yazi
     ranger
+    udiskie
 
     # ls moderno
     lsd
@@ -167,9 +172,12 @@ link_config hypr
 link_config waybar
 link_config kitty
 link_config rofi
+link_config nvim
+link_config yazi
+link_config udiskie
 link_config swaync
-link_config ranger
 link_config lsd
+link_config ranger
 
 # ── Scripts ejecutables ───────────────────────────────────────
 section "Permisos de scripts"
@@ -178,7 +186,8 @@ chmod +x "$DOTFILES_DIR/hypr/scripts/"*.sh 2>/dev/null && \
     success "hypr/scripts/ → ejecutables"
 
 chmod +x "$DOTFILES_DIR/util/bluetooth/btmenu" \
-         "$DOTFILES_DIR/util/wifi/wifimenu" 2>/dev/null && \
+         "$DOTFILES_DIR/util/wifi/wifimenu" \
+         "$DOTFILES_DIR/util/udiskie/"*.sh 2>/dev/null && \
     success "util/ → ejecutables"
 
 # ── Directorio de imágenes ────────────────────────────────────

@@ -18,10 +18,13 @@ Configuración de escritorio Linux con tema **Cyberpunk Red**: fondos negros pro
 | Barra de estado | [Waybar](https://github.com/Alexays/Waybar) |
 | Lanzador de apps | [Rofi](https://github.com/davatorium/rofi) |
 | Terminal | [Kitty](https://sw.kovidgoyal.net/kitty/) |
-| Gestor de archivos | Nautilus |
+| Gestor de archivos (GUI) | Nautilus |
+| Gestor de archivos (TUI) | [Yazi](https://yazi-rs.github.io/) |
+| Editor | [Neovim](https://neovim.io/) |
 | Fondo de pantalla | [Hyprpaper](https://github.com/hyprwm/hyprpaper) |
 | Notificaciones | [SwayNC](https://github.com/ErikReider/SwayNotificationCenter) |
 | Visualizador de audio | [Cava](https://github.com/karlstav/cava) |
+| Discos externos | [udiskie](https://github.com/coldfix/udiskie) |
 
 ---
 
@@ -48,19 +51,34 @@ Regla de color: **rojo** = acción/crítico · **amarillo** = datos/estado · **
 dotfiles/
 ├── hypr/
 │   ├── hyprland.conf       # WM: layout, bordes, animaciones, atajos
-│   └── hyprpaper.conf      # Wallpaper
-├── kitty/
-│   └── kitty.conf          # Terminal: colores, fuente, cursor, blur
+│   ├── hyprpaper.conf      # Wallpaper
+│   ├── hypridle.conf       # Idle / bloqueo de pantalla
+│   └── scripts/            # Scripts para waybar y atajos
 ├── waybar/
 │   ├── config.jsonc        # Módulos: CPU, RAM, disco, red, batería, reloj
 │   ├── style.css           # Estilos: esquinas cortadas, animaciones
 │   └── power_menu.xml      # Menú de apagado
+├── kitty/
+│   └── kitty.conf          # Terminal: colores, fuente, cursor, blur
 ├── rofi/
 │   ├── config.rasi         # Configuración principal
-│   ├── catppuccin-mocha.rasi  # Tema Cyberpunk Red
+│   ├── catppuccin-mocha.rasi  # Tema Cyberpunk Red (contenido Cyberpunk Red)
 │   └── corner-cut.svg      # Efecto de esquina diagonal
-├── swaync/                 # Notificaciones (pendiente)
-├── ranger/                 # Gestor de archivos CLI (pendiente)
+├── nvim/
+│   └── init.lua            # Configuración de Neovim (lazy.nvim)
+├── yazi/
+│   ├── yazi.toml           # Configuración principal
+│   ├── keymap.toml         # Atajos de teclado
+│   └── theme.toml          # Tema visual
+├── udiskie/
+│   └── config.yml          # Automontaje de discos externos
+├── swaync/                 # Notificaciones
+├── ranger/                 # Gestor de archivos CLI (legacy)
+├── lsd/                    # ls moderno
+├── util/
+│   ├── bluetooth/btmenu    # Menú bluetooth (rofi)
+│   ├── wifi/wifimenu       # Menú wifi (rofi)
+│   └── udiskie/            # Scripts de gestión de discos externos
 ├── desing_guide.md         # Guía de diseño del sistema visual
 └── readme.md
 ```
@@ -78,9 +96,9 @@ dotfiles/
 - 10 workspaces con atajos `Super+1..0`
 
 ### Waybar
-- Módulos izquierda: lanzador Rofi + workspaces
-- Módulos centro: CPU, temperatura, RAM, disco
-- Módulos derecha: Cava, Bluetooth, red, brillo, audio, batería, reloj, menú de poder
+- Módulos izquierda: lanzador Rofi, workspaces, taskbar de ventanas, MPRIS, Cava
+- Módulos centro: privacidad, monitor de discos externos (udiskie)
+- Módulos derecha: Bluetooth, red, brillo, audio, batería, reloj, menú de poder
 - Animación de workspace activo: blink amarillo 0.8s
 - Efecto de esquina cortada en cada módulo (gradiente CSS 135°)
 
@@ -101,33 +119,36 @@ dotfiles/
 Clonar e instalar con symlinks:
 
 ```bash
-git clone https://github.com/usuario/dotfiles.git ~/dotfiles
+git clone https://github.com/rquiroga83/dotfiles.git ~/dotfiles
+cd ~/dotfiles && bash install.sh
+```
 
-# Hyprland
-ln -s ~/dotfiles/hypr ~/.config/hypr
+O manualmente con symlinks:
 
-# Kitty
-ln -s ~/dotfiles/kitty ~/.config/kitty
-
-# Waybar
-ln -s ~/dotfiles/waybar ~/.config/waybar
-
-# Rofi
-ln -s ~/dotfiles/rofi ~/.config/rofi
-
-# SwayNC
-ln -s ~/dotfiles/swaync ~/.config/swaync
+```bash
+ln -s ~/dotfiles/hypr     ~/.config/hypr
+ln -s ~/dotfiles/waybar   ~/.config/waybar
+ln -s ~/dotfiles/kitty    ~/.config/kitty
+ln -s ~/dotfiles/rofi     ~/.config/rofi
+ln -s ~/dotfiles/nvim     ~/.config/nvim
+ln -s ~/dotfiles/yazi     ~/.config/yazi
+ln -s ~/dotfiles/udiskie  ~/.config/udiskie
+ln -s ~/dotfiles/swaync   ~/.config/swaync
+ln -s ~/dotfiles/lsd      ~/.config/lsd
 ```
 
 ### Dependencias (Arch Linux / pacman + AUR)
 
 ```bash
 # Pacman
-sudo pacman -S hyprland hyprpaper waybar kitty rofi nautilus \
-               swaync playerctl brightnessctl grim slurp wireplumber
+sudo pacman -S hyprland hyprpaper hypridle hyprlock waybar kitty \
+               rofi-wayland swaync neovim yazi udiskie lsd \
+               playerctl brightnessctl grim slurp wl-clipboard \
+               wireplumber pipewire pipewire-pulse pavucontrol \
+               bluez bluez-utils networkmanager btop
 
 # AUR (yay / paru)
-yay -S cava waybar-cava hyprpaper
+yay -S cava hyprshade wlogout
 ```
 
 **Fuente requerida:**
