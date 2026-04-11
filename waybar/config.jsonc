@@ -125,7 +125,7 @@
 		"higher_cutoff_freq": 16000,
 		"method": "pulse",
 		"source": "auto",
-		"stereo": false,
+		"stereo": true,
 		"reverse": false,
         	"hide_on_silence": false,
         	"sleep_timer": 5,
