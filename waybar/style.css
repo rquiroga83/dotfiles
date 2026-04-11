@@ -81,7 +81,7 @@ window#waybar.hidden {
 /* ── Taskbar ─────────────────────────────────────────── */
 #taskbar {
   margin: 5px 4px;
-  background: linear-gradient(135deg, transparent 8px, #1a0000 8px);
+  background: transparent;
   padding: 0 6px;
 }
 
@@ -94,11 +94,11 @@ window#waybar.hidden {
 }
 
 #taskbar button:hover {
-  background: linear-gradient(135deg, transparent 6px, #2b0000 6px);
+  background: #2b0000;
 }
 
 #taskbar button.active {
-  background: linear-gradient(135deg, transparent 6px, #2b0000 6px);
+  background: #2b0000;
   border-bottom: 2px solid #ff003c;
 }
 
