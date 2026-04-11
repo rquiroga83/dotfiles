@@ -22,7 +22,7 @@
   //"modules-right":["cava","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
   "modules-left": ["custom/launcher", "hyprland/workspaces", "wlr/taskbar", "mpris", "cava"],
   "modules-center": ["privacy","custom/udiskie"],
-  "modules-right":["cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
+  "modules-right":["cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","custom/clock","custom/power"],
 
   // Modules Definition
   "custom/launcher" : {
@@ -285,36 +285,12 @@
         ]
     },
 
-   "clock": {
-        "tooltip": true,
+   // "clock" reemplazado por custom/clock para tooltip con festivos colombianos
+   "custom/clock": {
+        "exec": "python3 ~/dotfiles/util/calendar/waybar_cal.py",
+        "return-type": "json",
         "interval": 60,
-        "format": "  {:%I:%M %p}",
-        "format-alt": "󰸗 {:%A %d %B %Y   %I:%M %p} ",
-        "tooltip-format": "<tt><small>{calendar}</small></tt>",
-        "calendar": {
-                    "mode"          : "year",
-                    "mode-mon-col"  : 3,
-                    // "weeks-pos"     : "right",
-                    "on-scroll"     : 1,
-                    "format": {
-                              "months":     "<span color='#45e9ff'><b>{}</b></span>",
-                              "days":       "<span color='#f1f1f1'><b>{}</b></span>",
-                              // "weeks":      "<span color='#99ffdd'><b>W{}</b></span>",
-                              "weekdays":   "<span color='#66a8ff'><b>{}</b></span>",
-                              "today":      "<span color='#66a8ff'><b><u>{}</u></b></span>"
-                              }
-                    },
-        "actions":  {
-                    "on-click-right": "mode",
-                    "on-scroll-up": "tz_up",
-                    "on-scroll-down": "tz_down",
-                    "on-scroll-up": "shift_up",
-                    "on-scroll-down": "shift_down"
-                    }
+        "tooltip": true
     },
-
-
-    }
- 
-
+  }
 }

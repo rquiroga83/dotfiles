@@ -133,6 +133,7 @@ window#waybar.hidden {
 #battery,
 #backlight,
 #clock,
+#custom-clock,
 #temperature,
 #memory,
 #disk,
@@ -191,7 +192,8 @@ window#waybar.hidden {
   color: #fcee0a;
 }
 
-#clock {
+#clock,
+#custom-clock {
   color: #ff003c;
 }
 
