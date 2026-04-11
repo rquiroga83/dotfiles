@@ -5,6 +5,7 @@
 import json
 import calendar
 import datetime
+import re
 
 MONTHS_ES = [
     "", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -95,6 +96,18 @@ def get_colombian_holidays(year):
     return h
 
 
+# ── Utilidades de centrado ────────────────────────────────────────────────────
+
+def visible_len(line):
+    """Longitud visible de una línea (sin tags Pango)."""
+    return len(re.sub(r'<[^>]+>', '', line))
+
+def center_line(line, width):
+    """Añade espacios a la izquierda para centrar dentro de `width` chars visibles."""
+    pad = max(0, (width - visible_len(line)) // 2)
+    return ' ' * pad + line
+
+
 # ── Renderizado de calendario ──────────────────────────────────────────────────
 
 def format_month(year, month, today, holidays):
@@ -140,24 +153,30 @@ def main():
     if y2 != y1:
         holidays.update(get_colombian_holidays(y2))
 
-    # Calendarios de los dos meses
-    block1 = "\n".join(format_month(y1, m1, today, holidays))
-    block2 = "\n".join(format_month(y2, m2, today, holidays))
-
-    # Festivos de los dos meses mostrados
+    # Festivos de los dos meses (se generan primero para medir el ancho)
     shown = sorted(
         (d, n) for d, n in holidays.items()
         if (d.year == y1 and d.month == m1) or (d.year == y2 and d.month == m2)
     )
 
-    sections = [block1, block2]
-
+    hlines = []
     if shown:
-        hlines = [s("── Festivos ──────────────────", CYAN, bold=True)]
+        hlines.append(s("── Festivos ──────────────────", CYAN, bold=True))
         for date, name in shown:
             month_lbl = s(f"{MONTHS_SHORT[date.month]}", RED, bold=True)
             day_lbl   = s(f"{date.day:2d}", RED, bold=True)
             hlines.append(f"{s('★', YELLOW)} {day_lbl} {month_lbl}  {s(name, SOFT)}")
+
+    # Ancho de referencia = línea más ancha de los festivos (mín. 20)
+    ref_w = max((visible_len(l) for l in hlines), default=20)
+    ref_w = max(ref_w, 20)
+
+    # Calendarios centrados respecto al ancho de referencia
+    block1 = "\n".join(center_line(l, ref_w) for l in format_month(y1, m1, today, holidays))
+    block2 = "\n".join(center_line(l, ref_w) for l in format_month(y2, m2, today, holidays))
+
+    sections = [block1, block2]
+    if hlines:
         sections.append("\n".join(hlines))
 
     tooltip_body = "\n\n".join(sections)
@@ -168,7 +187,7 @@ def main():
     )
 
     # Texto del reloj (mismo formato que el módulo original)
-    text = f"  {now.strftime('%d %I:%M %p')}"
+    text = f"{now.strftime('%d %I:%M %p')}"
 
     print(json.dumps({"text": text, "tooltip": tooltip, "class": "clock"}))
 
