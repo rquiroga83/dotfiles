@@ -22,7 +22,7 @@
   //"modules-right":["cava","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
   "modules-left": ["custom/launcher", "hyprland/workspaces", "wlr/taskbar", "mpris", "cava"],
   "modules-center": ["privacy","custom/udiskie"],
-  "modules-right":["cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","custom/clock","custom/power"],
+  "modules-right":["cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","custom/clock","custom/notification","custom/power"],
 
   // Modules Definition
   "custom/launcher" : {
@@ -285,7 +285,17 @@
         ]
     },
 
-   // "clock" reemplazado por custom/clock para tooltip con festivos colombianos
+   "custom/notification": {
+        "tooltip": false,
+        "format": "󰂜",
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "sleep 0.1 && swaync-client -t -sw",
+        "on-click-right": "sleep 0.1 && swaync-client -d -sw"
+   },
+
+      // "clock" reemplazado por custom/clock para tooltip con festivos colombianos
    "custom/clock": {
         "exec": "python3 ~/dotfiles/util/calendar/waybar_cal.py",
         "return-type": "json",

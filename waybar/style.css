@@ -332,6 +332,28 @@ menuitem * {
 }
 
 
+/* ── SwayNC notifications ───────────────────────────── */
+#custom-notification {
+  margin: 5px 0px 5px 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background: transparent;
+  transition: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #555555;
+}
+
+#custom-notification.notification {
+  color: #ff003c;
+}
+
+#custom-notification.dnd-notification,
+#custom-notification.dnd-none {
+  color: #555555;
+  background: transparent;
+}
+
 /* udiskie — icono unidades */
 #custom-udiskie {
   color: #555555;
