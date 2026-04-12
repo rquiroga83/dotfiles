@@ -30,10 +30,29 @@ blankwindow {
 }
 
 /* ── Centro de control ─────────────────────────────────────── */
+@keyframes slide-bounce-right {
+  0% {
+    margin-right: -420px;
+    opacity: 0;
+  }
+  60% {
+    margin-right: 8px;
+    opacity: 1;
+  }
+  80% {
+    margin-right: -3px;
+  }
+  100% {
+    margin-right: 0;
+    opacity: 1;
+  }
+}
+
 .control-center {
   color: #ffcccc;
   border: none;
   border-radius: 0;
+  animation: slide-bounce-right 0.35s ease-out;
   /* corte sup-izq + inf-der: cada capa cubre mitad del alto */
   background:
     linear-gradient(135deg, transparent 10px, rgba(10, 0, 0, 0.85) 10px) top    / 100% 100% no-repeat;
