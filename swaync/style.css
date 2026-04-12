@@ -120,7 +120,7 @@ blankwindow {
 
 /* ── Acción por defecto (cuerpo de la notificación) ───────── */
 .notification-default-action {
-  padding: 10px 12px;
+  padding: 10px 40px 10px 12px;
   margin: 0;
   box-shadow: none;
   background: transparent;
@@ -138,6 +138,23 @@ blankwindow {
 .notification-default-action:not(:only-child) {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+}
+
+/* ── Centro de control: notificaciones sin recorte ────────── */
+.control-center .notification-row .notification-background .notification {
+  background: rgba(26, 0, 0, 0.85);
+}
+.control-center .notification-row .notification-background .notification.low {
+  background: rgba(10, 0, 0, 0.85);
+}
+.control-center .notification-row .notification-background .notification.normal {
+  background: rgba(26, 0, 0, 0.85);
+}
+.control-center .notification-row .notification-background .notification.critical {
+  background: rgba(42, 0, 16, 0.85);
+}
+.control-center .notification-default-action:hover {
+  background: rgba(43, 0, 0, 0.85);
 }
 
 /* ── Contenido de la notificación ─────────────────────────── */
