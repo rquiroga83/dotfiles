@@ -292,16 +292,24 @@ window#waybar.hidden {
 
 /* ── Tooltips ───────────────────────────────────────── */
 tooltip {
-  background: #0a0000;
-  border: 1px solid #ff003c;
+  background: linear-gradient(135deg, transparent 8px, #0a0000 8px);
+  border: none;
+  border-bottom: 1px solid #ff003c;
   border-radius: 0px;
-  padding: 4px;
+  padding: 0;
+  box-shadow: 0 4px 12px rgba(255, 0, 60, 0.4), 0 1px 0 #ff003c;
+}
+
+tooltip > box {
+  padding: 10px 14px;
+  background: transparent;
 }
 
 tooltip label {
   color: #ffcccc;
   font-family: "JetbrainsMono Nerd Font";
   font-size: 13px;
+  padding: 0;
 }
 
 /* ── Menú power ─────────────────────────────────────── */
