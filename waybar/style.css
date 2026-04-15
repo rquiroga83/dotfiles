@@ -188,6 +188,13 @@ window#waybar.hidden {
   }
 }
 
+@keyframes blink-critical-no-background {
+  to {
+    color: #ffcccc;
+    background: transparent;
+  }
+}
+
 #backlight {
   color: #fcee0a;
 }
@@ -372,4 +379,23 @@ menuitem * {
   color: #fcee0a;
   padding: 0 8px;
   min-width: 20px;
+}
+
+/* ── Caps Lock ──────────────────────────────────────── */
+#custom-capslock {
+  padding: 0 8px;
+  min-width: 20px;
+  transition: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: transparent;
+}
+
+#custom-capslock.active {
+  color: #0a0000;
+  animation-name: blink-critical-no-background;
+  animation-duration: 0.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }

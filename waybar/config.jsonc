@@ -21,7 +21,7 @@
   //"modules-center": ["cpu","temperature","memory","disk"],
   //"modules-right":["cava","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
   "modules-left": ["custom/launcher", "hyprland/workspaces", "wlr/taskbar", "mpris", "cava"],
-  "modules-center": ["privacy","custom/udiskie"],
+  "modules-center": ["privacy","custom/capslock","custom/udiskie"],
   "modules-right":["cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","custom/clock","custom/notification","custom/power"],
 
   // Modules Definition
@@ -302,5 +302,12 @@
         "interval": 60,
         "tooltip": true
     },
+
+  // Indicador de Caps Lock
+  "custom/capslock": {
+        "exec": "~/dotfiles/util/capslock/waybar-capslock.sh",
+        "return-type": "json",
+        "interval": 1,
+        "tooltip": true
   }
 }
