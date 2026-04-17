@@ -53,10 +53,12 @@ progress_label  = { fg = "#ffcccc", bg = "#1a0000", bold = true }
 progress_normal = { fg = "#00cfff", bg = "#1a0000" }
 progress_error  = { fg = "#ff003c", bg = "#1a0000" }
 
-# ─── Tabs ──────────────────────────────────────────────────────────────────
-[tab]
-active   = { fg = "#0a0000", bg = "#ff003c", bold = true }
-inactive = { fg = "#ffcccc", bg = "#1a0000" }
+# ─── Tabs (estilo Powerline, igual que la barra de estado y modo) ───────────
+[tabs]
+active     = { fg = "#0a0000", bg = "#ff003c", bold = true }
+inactive   = { fg = "#ffcccc", bg = "#1a0000" }
+sep_inner  = { open = "", close = "" }
+sep_outer  = { open = "", close = "" }
 
 # ─── Tipos de archivo (colores según tipo) ─────────────────────────────────
 [filetype]
