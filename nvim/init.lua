@@ -122,7 +122,19 @@ require("lazy").setup({
       vim.g.loaded_netrw       = 1
       vim.g.loaded_netrwPlugin = 1
 
+      -- Reemplazar Ctrl+e en el árbol para volver al editor
+      local function on_attach(bufnr)
+        local api = require("nvim-tree.api")
+        -- Heredar todos los keymaps por defecto
+        api.config.mappings.default_on_attach(bufnr)
+        -- Sobreescribir Ctrl+e: volver al editor en vez de abrir archivo
+        vim.keymap.set("n", "<C-e>", function()
+          vim.cmd("wincmd p")
+        end, { buffer = bufnr, nowait = true, silent = true, desc = "Back to editor" })
+      end
+
       require("nvim-tree").setup({
+        on_attach = on_attach,
         view = {
           width = 32,
           side  = "left",
@@ -252,8 +264,14 @@ vim.keymap.set("n", "<C-9>",   "9gt", { desc = "Tab 9" })
 
 -- Atajo: Ctrl+b abre/cierra el panel
 vim.keymap.set("n", "<C-b>", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file tree" })
--- Atajo: Ctrl+Shift+e enfoca el panel
-vim.keymap.set("n", "<C-S-e>", "<cmd>NvimTreeFocus<CR>", { desc = "Focus file tree" })
+-- Atajo: Ctrl+e alterna el foco entre árbol y editor (mapeo global único)
+vim.keymap.set("n", "<C-e>", function()
+  if vim.bo.filetype == "NvimTree" then
+    vim.cmd("wincmd p")
+  else
+    vim.cmd("NvimTreeFocus")
+  end
+end, { desc = "Toggle focus tree/editor", nowait = true, silent = true })
 
 -- Abrir nvim-tree solo si NO se está restaurando una sesión
 vim.api.nvim_create_autocmd("VimEnter", {
