@@ -82,3 +82,23 @@ desc = "Ordenar por tamaño (mayor primero)"
 on  = ["s", "m"]
 run = "sort modified --reverse --dir-first"
 desc = "Ordenar por fecha (más reciente primero)"
+
+# ─── Google Drive (rclone mount) ──────────────────────────────────────
+
+# Ir a Google Drive
+[[mgr.prepend_keymap]]
+on  = ["g", "d"]
+run = "cd ~/mnt/gdrive"
+desc = "Ir a Google Drive"
+
+# Montar Google Drive
+[[mgr.prepend_keymap]]
+on  = ["m", "g"]
+run = 'shell --block --confirm "mkdir -p ~/mnt/gdrive && rclone mount gdrive: ~/mnt/gdrive --vfs-cache-mode full --vfs-cache-max-age 1h --vfs-cache-max-size 10G --daemon"'
+desc = "Montar Google Drive"
+
+# Desmontar Google Drive
+[[mgr.prepend_keymap]]
+on  = ["m", "u"]
+run = 'shell --block --confirm "fusermount3 -u ~/mnt/gdrive"'
+desc = "Desmontar Google Drive"
