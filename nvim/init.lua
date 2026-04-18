@@ -14,6 +14,24 @@ require("lazy").setup({
   -- Íconos (necesario para nvim-tree y tabline)
   { "nvim-tree/nvim-web-devicons", lazy = false },
 
+  -- Persistencia de sesión (restaurar estado al reabrir)
+  {
+    "folke/persistence.nvim",
+    lazy = false,
+    priority = 100,
+    config = function()
+      require("persistence").setup({
+        dir = vim.fn.stdpath("data") .. "/persistence/",
+        options = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp" },
+        save_empty = false,
+        -- Ignorar directorios donde no queremos restaurar sesión
+        pre_save = nil,
+        -- Guardar sesión automáticamente al salir
+        autosave = true,
+      })
+    end,
+  },
+
   -- Explorador de archivos
   {
     "nvim-tree/nvim-tree.lua",
@@ -156,10 +174,22 @@ vim.keymap.set("n", "<C-b>", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file tr
 -- Atajo: Ctrl+Shift+e enfoca el panel
 vim.keymap.set("n", "<C-S-e>", "<cmd>NvimTreeFocus<CR>", { desc = "Focus file tree" })
 
--- Abrir automáticamente al iniciar nvim
+-- Abrir nvim-tree solo si NO se está restaurando una sesión
 vim.api.nvim_create_autocmd("VimEnter", {
+  nested = true,
   callback = function()
-    require("nvim-tree.api").tree.open()
+    -- Verificar si persistence.nvim restauró una sesión
+    local has_session = false
+    local ok, persistence = pcall(require, "persistence")
+    if ok then
+      has_session = persistence.load()
+    end
+    -- Si no había sesión previa, abrir el árbol de archivos
+    if not has_session then
+      vim.defer_fn(function()
+        require("nvim-tree.api").tree.open()
+      end, 50)
+    end
   end,
 })
 
@@ -167,6 +197,10 @@ vim.api.nvim_create_autocmd("VimEnter", {
 vim.opt.number         = true
 vim.opt.relativenumber = false
 vim.opt.cursorline     = true
+vim.opt.hidden         = true    -- mantiene buffers con cambios no guardados en background
+vim.opt.undofile       = true    -- persiste historial de undo entre sesiones
+vim.opt.swapfile       = true    -- archivo swap para recuperación ante crashes
+vim.opt.backup         = false   -- sin archivos de backup (undo file es suficiente)
 
 -- ─── Colores — se re-aplican tras cualquier colorscheme ───────────────────
 local function set_colors()
