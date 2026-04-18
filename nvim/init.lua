@@ -32,6 +32,87 @@ require("lazy").setup({
     end,
   },
 
+  -- Git: sign column + hunk operations
+  {
+    "lewis6991/gitsigns.nvim",
+    event = "BufReadPre",
+    config = function()
+      require("gitsigns").setup({
+        signs = {
+          add          = { text = "▎" },
+          change       = { text = "▎" },
+          delete       = { text = "" },
+          topdelete    = { text = "" },
+          changedelete = { text = "▎" },
+          untracked    = { text = "▎" },
+        },
+        signs_staged = {
+          add          = { text = "▎" },
+          change       = { text = "▎" },
+          delete       = { text = "" },
+          topdelete    = { text = "" },
+          changedelete = { text = "▎" },
+        },
+        signcolumn = true,
+        numhl      = false,
+        linehl     = false,
+        word_diff  = false,
+        current_line_blame = true,
+        current_line_blame_opts = {
+          virt_text = true,
+          virt_text_pos = "eol",
+          delay = 300,
+        },
+        current_line_blame_formatter = " <author>, <author_time:%R> • <summary>",
+        preview_config = {
+          border = "single",
+          style = "minimal",
+        },
+        on_attach = function(bufnr)
+          local gs = package.loaded.gitsigns
+
+          -- Navegación entre hunks
+          vim.keymap.set("n", "]h", function()
+            if vim.wo.diff then return "]h" end
+            vim.schedule(function() gs.nav_hunk("next") end)
+            return "<Ignore>"
+          end, { expr = true, buffer = bufnr, desc = "Next hunk" })
+
+          vim.keymap.set("n", "[h", function()
+            if vim.wo.diff then return "[h" end
+            vim.schedule(function() gs.nav_hunk("prev") end)
+            return "<Ignore>"
+          end, { expr = true, buffer = bufnr, desc = "Prev hunk" })
+
+          -- Atajos para hunks (leader + g)
+          vim.keymap.set("n", "<leader>hs", gs.stage_hunk,        { buffer = bufnr, desc = "Stage hunk" })
+          vim.keymap.set("n", "<leader>hr", gs.reset_hunk,        { buffer = bufnr, desc = "Reset hunk" })
+          vim.keymap.set("n", "<leader>hu", gs.undo_stage_hunk,   { buffer = bufnr, desc = "Undo stage hunk" })
+          vim.keymap.set("n", "<leader>hp", gs.preview_hunk,      { buffer = bufnr, desc = "Preview hunk" })
+          vim.keymap.set("n", "<leader>hb", gs.toggle_current_line_blame, { buffer = bufnr, desc = "Toggle blame" })
+          vim.keymap.set("n", "<leader>hd", gs.diffthis,           { buffer = bufnr, desc = "Diff this" })
+        end,
+      })
+
+      -- Colores Git (Cyberpunk Red)
+      vim.api.nvim_set_hl(0, "GitSignsAdd",          { fg = "#00cfff", bg = "none" })
+      vim.api.nvim_set_hl(0, "GitSignsChange",       { fg = "#fcee0a", bg = "none" })
+      vim.api.nvim_set_hl(0, "GitSignsDelete",       { fg = "#ff003c", bg = "none" })
+      vim.api.nvim_set_hl(0, "GitSignsTopdelete",    { fg = "#ff003c", bg = "none" })
+      vim.api.nvim_set_hl(0, "GitSignsChangedelete", { fg = "#ff6e00", bg = "none" })
+      vim.api.nvim_set_hl(0, "GitSignsUntracked",    { fg = "#553333", bg = "none" })
+      vim.api.nvim_set_hl(0, "GitSignsStagedAdd",          { fg = "#00a0cc", bg = "none" })
+      vim.api.nvim_set_hl(0, "GitSignsStagedChange",       { fg = "#d4c700", bg = "none" })
+      vim.api.nvim_set_hl(0, "GitSignsStagedDelete",       { fg = "#cc0030", bg = "none" })
+      vim.api.nvim_set_hl(0, "GitSignsAddPreview",         { fg = "#00cfff", bg = "#0a1a1a" })
+      vim.api.nvim_set_hl(0, "GitSignsDeletePreview",      { fg = "#ff003c", bg = "#1a0000" })
+      vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame",   { fg = "#553333", bg = "none", italic = true })
+    end,
+  },
+
+  -- Git: operaciones completas (status, commit, push, diff, blame, log)
+  { "tpope/vim-fugitive" },
+
   -- Explorador de archivos
   {
     "nvim-tree/nvim-tree.lua",
