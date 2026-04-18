@@ -124,9 +124,7 @@ function _G.cyberpunk_tabline()
       hl = modified and "%#TabLineMod#" or "%#TabLine#"
     end
 
-    -- Click para ir a la tab (Vim permite %N@TabLineClick.X@)
-    local click = string.format("%%%d@TabLineGo@", tabid)
-    table.insert(tab_items, click .. hl .. label)
+    table.insert(tab_items, hl .. label)
   end
 
   local tab_string = table.concat(tab_items, "%#TabLineSep#│")
@@ -137,17 +135,21 @@ function _G.cyberpunk_tabline()
   return fill .. "%=" .. tab_string .. "%#TabLineFill#"
 end
 
--- Click handler: ir a la tab clickeada
-function _G.TabLineGo(minwid, _clicks, _btn, _mod)
-  vim.api.nvim_set_current_tabpage(minwid)
-end
-
 vim.o.tabline = "%!v:lua.cyberpunk_tabline()"
 vim.o.showtabline = 2  -- siempre visible
 
 -- Atajos para navegar tabs
 vim.keymap.set("n", "<Tab>",   "<cmd>tabnext<CR>",  { desc = "Next tab" })
 vim.keymap.set("n", "<S-Tab>", "<cmd>tabprevious<CR>", { desc = "Prev tab" })
+vim.keymap.set("n", "<C-1>",   "1gt", { desc = "Tab 1" })
+vim.keymap.set("n", "<C-2>",   "2gt", { desc = "Tab 2" })
+vim.keymap.set("n", "<C-3>",   "3gt", { desc = "Tab 3" })
+vim.keymap.set("n", "<C-4>",   "4gt", { desc = "Tab 4" })
+vim.keymap.set("n", "<C-5>",   "5gt", { desc = "Tab 5" })
+vim.keymap.set("n", "<C-6>",   "6gt", { desc = "Tab 6" })
+vim.keymap.set("n", "<C-7>",   "7gt", { desc = "Tab 7" })
+vim.keymap.set("n", "<C-8>",   "8gt", { desc = "Tab 8" })
+vim.keymap.set("n", "<C-9>",   "9gt", { desc = "Tab 9" })
 
 -- Atajo: Ctrl+b abre/cierra el panel
 vim.keymap.set("n", "<C-b>", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file tree" })
