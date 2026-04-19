@@ -143,11 +143,11 @@
       "light": "muted_red"
     },
     "markdownLink": {
-      "dark": "electric_cyan",
+      "dark": "neon_blue",
       "light": "#0088AA"
     },
     "markdownLinkText": {
-      "dark": "hot_pink",
+      "dark": "neon_red",
       "light": "#CC2266"
     },
     "markdownCode": {
@@ -171,19 +171,19 @@
       "light": "#B08098"
     },
     "markdownListItem": {
-      "dark": "neon_pink",
+      "dark": "neon_red",
       "light": "#CC2266"
     },
     "markdownListEnumeration": {
-      "dark": "electric_cyan",
+      "dark": "neon_blue",
       "light": "#0088AA"
     },
     "markdownImage": {
-      "dark": "electric_cyan",
+      "dark": "neon_blue",
       "light": "#0088AA"
     },
     "markdownImageText": {
-      "dark": "hot_pink",
+      "dark": "neon_red",
       "light": "#CC2266"
     },
     "markdownCodeBlock": {
@@ -195,15 +195,15 @@
       "light": "#8A5068"
     },
     "syntaxKeyword": {
-      "dark": "deep_magenta",
+      "dark": "neon_red",
       "light": "#AA0099"
     },
     "syntaxFunction": {
-      "dark": "electric_cyan",
+      "dark": "neon_blue",
       "light": "#0088AA"
     },
     "syntaxVariable": {
-      "dark": "hot_pink",
+      "dark": "neon_red",
       "light": "#CC2266"
     },
     "syntaxString": {
@@ -215,15 +215,15 @@
       "light": "#886600"
     },
     "syntaxType": {
-      "dark": "neon_orange",
+      "dark": "neon_blue",
       "light": "#CC5500"
     },
     "syntaxOperator": {
-      "dark": "neon_pink",
+      "dark": "neon_red",
       "light": "#CC2266"
     },
     "syntaxPunctuation": {
-      "dark": "text_mid",
+      "dark": "neon_blue",
       "light": "#553040"
     }
   }
