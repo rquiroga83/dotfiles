@@ -135,6 +135,8 @@ ln -s ~/dotfiles/yazi     ~/.config/yazi
 ln -s ~/dotfiles/udiskie  ~/.config/udiskie
 ln -s ~/dotfiles/swaync   ~/.config/swaync
 ln -s ~/dotfiles/lsd      ~/.config/lsd
+ln -s ~/dotfiles/opencode/themes ~/.config/opencode/themes
+
 ```
 
 ### Dependencias (Arch Linux / pacman + AUR)
