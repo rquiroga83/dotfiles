@@ -187,7 +187,7 @@ def main():
     )
 
     # Texto del reloj (mismo formato que el módulo original)
-    text = f"{now.strftime('%d %I:%M %p')}"
+    text = f"{now.strftime('%d %I:%M')}"
 
     print(json.dumps({"text": text, "tooltip": tooltip, "class": "clock"}))
 
