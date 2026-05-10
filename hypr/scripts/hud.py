@@ -13,8 +13,8 @@ CSS = b"""
 window {
   background-color: transparent;
   background-image:
-    linear-gradient(135deg, transparent 8px, rgba(26,0,0,0.92) 8px),
-    linear-gradient(315deg, transparent 8px, rgba(26,0,0,0.92) 8px);
+    linear-gradient(135deg, transparent 8px, rgba(26,0,0,0.72) 8px),
+    linear-gradient(315deg, transparent 8px, rgba(26,0,0,0.72) 8px);
   background-position: top left, bottom right;
   background-size: 51% 100%, 51% 100%;
   background-repeat: no-repeat, no-repeat;
@@ -115,7 +115,7 @@ class HUD(Gtk.Window):
     # ── actualización de widgets ─────────────────────────────────────────────
 
     def _update(self):
-        self.clock_label.set_text(" " + time.strftime("%H:%M"))
+        self.clock_label.set_text(" " + time.strftime("%I:%M %p"))
         bat = battery_text()
         self.bat_label.set_text(bat)
         self.bat_label.set_visible(bool(bat))
