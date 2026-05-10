@@ -10,8 +10,8 @@ window#osd {
   /* Esquinas cortadas — el borde rojo va dentro del gradiente, no en box-shadow */
   background-image:
     linear-gradient(135deg, transparent 8px, #1a0000 8px),
-    linear-gradient(225deg, transparent 8px, #1a0000 8px);
-  background-position: top left, top right;
+    linear-gradient(315deg, transparent 8px, #1a0000 8px);
+  background-position: top left, bottom right;
   background-size: 51% 100%, 51% 100%;
   background-repeat: no-repeat, no-repeat;
   min-width: 260px;
