@@ -6,6 +6,7 @@
 window#osd {
   border-radius: 0;
   border: none;
+  background-color: transparent;
   /* Esquinas cortadas cyberpunk — máx 2 capas en GTK3 */
   background-image:
     linear-gradient(135deg, transparent 8px, #1a0000 8px),
