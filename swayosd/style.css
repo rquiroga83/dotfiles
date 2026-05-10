@@ -7,14 +7,13 @@ window#osd {
   border-radius: 0;
   border: none;
   background-color: transparent;
-  /* Esquinas cortadas cyberpunk — máx 2 capas en GTK3 */
+  /* Esquinas cortadas — el borde rojo va dentro del gradiente, no en box-shadow */
   background-image:
     linear-gradient(135deg, transparent 8px, #1a0000 8px),
     linear-gradient(225deg, transparent 8px, #1a0000 8px);
   background-position: top left, top right;
   background-size: 51% 100%, 51% 100%;
   background-repeat: no-repeat, no-repeat;
-  box-shadow: inset 0 0 0 1px #ff003c, 0 0 14px rgba(255, 0, 60, 0.35);
   min-width: 260px;
 }
 
