@@ -1,0 +1,64 @@
+* {
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 14px;
+}
+
+window#osd {
+  border-radius: 0;
+  border: none;
+  /* Esquinas cortadas cyberpunk — máx 2 capas en GTK3 */
+  background-image:
+    linear-gradient(135deg, transparent 8px, #1a0000 8px),
+    linear-gradient(225deg, transparent 8px, #1a0000 8px);
+  background-position: top left, top right;
+  background-size: 51% 100%, 51% 100%;
+  background-repeat: no-repeat, no-repeat;
+  box-shadow: inset 0 0 0 1px #ff003c, 0 0 14px rgba(255, 0, 60, 0.35);
+  min-width: 260px;
+}
+
+window#osd #container {
+  margin: 12px 20px;
+}
+
+window#osd image,
+window#osd label {
+  color: #fcee0a;
+}
+
+window#osd progressbar:disabled,
+window#osd image:disabled {
+  opacity: 0.4;
+}
+
+window#osd progressbar,
+window#osd segmentedprogress {
+  min-height: 8px;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+}
+
+window#osd trough,
+window#osd segment {
+  min-height: inherit;
+  border-radius: 0;
+  border: none;
+  background: #2b0000;
+}
+
+window#osd progress,
+window#osd segment.active {
+  min-height: inherit;
+  border-radius: 0;
+  border: none;
+  background: #00cfff;
+}
+
+window#osd segment {
+  margin-left: 6px;
+}
+
+window#osd segment:first-child {
+  margin-left: 0;
+}
