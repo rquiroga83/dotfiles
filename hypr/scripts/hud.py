@@ -16,7 +16,7 @@ window {
     linear-gradient(135deg, transparent 8px, rgba(26,0,0,0.72) 8px),
     linear-gradient(315deg, transparent 8px, rgba(26,0,0,0.72) 8px);
   background-position: top left, bottom right;
-  background-size: 51% 100%, 51% 100%;
+  background-size: 50% 100%, 50% 100%;
   background-repeat: no-repeat, no-repeat;
 }
 box {
