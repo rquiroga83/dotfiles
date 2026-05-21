@@ -64,33 +64,33 @@ sep_outer  = { open = " ", close = " " }
 [filetype]
 rules = [
   # Ejecutables → cyan
-  { mime = "application/x-executable",     style = { fg = "#00cfff", bold = true } },
-  { mime = "application/x-sharedlib",      style = { fg = "#00cfff" } },
+  { mime = "application/x-executable",    fg = "#00cfff", bold = true },
+  { mime = "application/x-sharedlib",     fg = "#00cfff" },
 
   # Scripts → amarillo
-  { mime = "application/x-sh",             style = { fg = "#fcee0a" } },
-  { mime = "text/x-python",                style = { fg = "#fcee0a" } },
-  { mime = "text/x-shellscript",           style = { fg = "#fcee0a" } },
+  { mime = "application/x-sh",            fg = "#fcee0a" },
+  { mime = "text/x-python",               fg = "#fcee0a" },
+  { mime = "text/x-shellscript",          fg = "#fcee0a" },
 
   # Imágenes → rojo neón
-  { mime = "image/*",                       style = { fg = "#ff003c" } },
+  { mime = "image/*",                      fg = "#ff003c" },
 
   # Video / audio → rojo suave
-  { mime = "video/*",                       style = { fg = "#ff003c", bold = true } },
-  { mime = "audio/*",                       style = { fg = "#ff003c" } },
+  { mime = "video/*",                      fg = "#ff003c", bold = true },
+  { mime = "audio/*",                      fg = "#ff003c" },
 
   # PDF / documentos → amarillo
-  { mime = "application/pdf",              style = { fg = "#fcee0a", bold = true } },
+  { mime = "application/pdf",             fg = "#fcee0a", bold = true },
 
   # Archivos comprimidos → cyan
-  { mime = "application/zip",              style = { fg = "#00cfff" } },
-  { mime = "application/x-tar",            style = { fg = "#00cfff" } },
-  { mime = "application/x-7z-compressed",  style = { fg = "#00cfff" } },
-  { mime = "application/gzip",             style = { fg = "#00cfff" } },
+  { mime = "application/zip",             fg = "#00cfff" },
+  { mime = "application/x-tar",           fg = "#00cfff" },
+  { mime = "application/x-7z-compressed", fg = "#00cfff" },
+  { mime = "application/gzip",            fg = "#00cfff" },
 
-  # Directorios → rojo neón (manejado por yazi automáticamente, pero por si acaso)
-  { name = "*/", style = { fg = "#ff003c", bold = true } },
+  # Directorios → rojo neón
+  { url = "*/",                            fg = "#ff003c", bold = true },
 
   # Archivos ocultos → gris suave
-  { name = ".*", style = { fg = "#555555" } },
+  { url = "*", is = "hidden",              fg = "#555555" },
 ]

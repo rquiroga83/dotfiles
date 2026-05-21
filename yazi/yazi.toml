@@ -94,5 +94,5 @@ rules = [
   { mime = "image/svg+xml", use = ["image", "edit"] },
 
   # Fallback
-  { name = "*", use = ["open", "edit"] },
+  { mime = "*", use = ["open", "edit"] },
 ]
