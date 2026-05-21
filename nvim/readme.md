@@ -34,6 +34,9 @@
 | `E` | Expandir todo el árbol |
 | `m` | Marcar/desmarcar archivo |
 | `U` | Desmarcar todos |
+| `Ctrl+t` | Abrir archivo en nueva tab |
+| `Ctrl+v` | Abrir archivo en split vertical |
+| `Ctrl+x` | Abrir archivo en split horizontal |
 
 ---
 
