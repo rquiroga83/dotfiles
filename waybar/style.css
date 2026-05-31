@@ -66,16 +66,6 @@ window#waybar.hidden {
   font-size: 14px;
   font-weight: bold;
   padding: 0 6px;
-  animation-name: blink-workspace;
-  animation-duration: 0.8s;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-}
-
-@keyframes blink-workspace {
-  from { color: #fcee0a; }
-  to   { color: #a89800; }
 }
 
 /* ── Taskbar ─────────────────────────────────────────── */

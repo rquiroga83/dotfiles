@@ -117,7 +117,7 @@
 
     "cava": {
 	//  "cava_config": "$XDG_CONFIG_HOME/cava/cava.conf",
-		"framerate": 60,
+		"framerate": 20,
 		"autosens": 0,
 		"sensitivity": 1.5,
 		"bars": 6,
@@ -127,7 +127,7 @@
 		"source": "auto",
 		"stereo": true,
 		"reverse": false,
-        	"hide_on_silence": false,
+        	"hide_on_silence": true,
         	"sleep_timer": 5,
 		"bar_delimiter": 0,
 		"monstercat": false,
@@ -179,11 +179,11 @@
 
 
 
-  "pulseaudio": {
+   "pulseaudio": {
 		"tooltip": true,
 		"tooltip-format" : "  Master Volume: {desc} ({volume}%)",
 		"scroll-step": 5,
-       		"interval": 1,
+       		"interval": 5,
 		"format": "{icon} {volume}%",
 		"format-muted": "<span color='#FF0000'> </span>",
 		"on-click":"pactl set-sink-mute @DEFAULT_SINK@ toggle",
@@ -220,7 +220,7 @@
   "custom/udiskie": {
     "exec": "~/dotfiles/util/udiskie/udisks-status.sh",
     "return-type": "json",
-    "interval": 3,
+    "interval": 10,
     "tooltip": true,
     "on-click": "~/dotfiles/util/udiskie/udisks-eject.sh"
   },
@@ -242,7 +242,7 @@
 		"format-wifi": "<span color='#9ece6a'> </span>",
 		"format-ethernet": "<span color='#7aa2f7'>󰈁</span>",
 		"format-disconnected": "<span color='#FF0000'>󰌙 </span>",
-        	"interval": 2,
+        	"interval": 4,
 		"tooltip-format-wifi": "󰢩 Interface: {ifname} \n—————————————————————————\n  {essid} \n󰥛 Signal: {signalStrength} % \n Frequency: {frequency}GHz \n—————————————————————————\n󰶡 {bandwidthDownBytes} - 󰶣 {bandwidthUpBytes}\n—————————————————————————\nIP: {ipaddr} \nSubmask: {netmask} \nGateway: {gwaddr}",
 		"tooltip-format-ethernet": "󰢩 Interface: {ifname} \n󰈁 LAN \n IP: {ipaddr} \n Submask: {netmask} \n Gateway: {gwaddr}",
 		"tooltip-format-disconnected": "󰅛 Disconnected.",
@@ -255,7 +255,7 @@
 		"tooltip": true,
 		"tooltip-format" : " Brightness: {0} %",
 		"format": "{1} {0}%",
-		"interval":1,
+		"interval": 5,
         	"on-scroll-up": "brightnessctl set +5%",
 		"on-scroll-down": "brightnessctl set 5%-",
 
@@ -307,7 +307,7 @@
   "custom/capslock": {
         "exec": "~/dotfiles/util/capslock/waybar-capslock.sh",
         "return-type": "json",
-        "interval": 1,
+        "interval": 2,
         "tooltip": true
   }
 }
