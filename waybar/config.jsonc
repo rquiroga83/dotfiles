@@ -119,7 +119,7 @@
 	//  "cava_config": "$XDG_CONFIG_HOME/cava/cava.conf",
 		"framerate": 20,
 		"autosens": 0,
-		"sensitivity": 2.0,
+		"sensitivity": 1.5,
 		"bars": 4,
 		"lower_cutoff_freq": 40,
 		"higher_cutoff_freq": 16000,
