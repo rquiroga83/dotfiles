@@ -9,7 +9,7 @@ Configuración de escritorio Linux con tema **Cyberpunk Red**: fondos negros pro
 ![Repositorio en GitHub con Firefox](screenshots/screen2.png)
 
 
-![Yazi nvim](screenshots/screen4.png)
+![Yazi nvim ](screenshots/screen4.png)
 
 ---
 
