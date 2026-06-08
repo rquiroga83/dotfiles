@@ -15,11 +15,8 @@ ADDRESS=$(echo "$ACTIVE" | jq -r '.address')
 if [ "$IS_PINNED" = "true" ]; then
     hyprctl dispatch pin
     hyprctl dispatch togglefloating
-    hyprctl dispatch tagwindow PIP   # remove PIP tag
     # Restaurar opacidades a valores globales (active=1.0, inactive=0.90)
-    hyprctl setprop address:$ADDRESS activeopacity 1.0
-    hyprctl setprop address:$ADDRESS inactiveopacity 0.90
-    hyprctl setprop address:$ADDRESS alphainactive 1.0
+    hyprctl dispatch setprop "address:$ADDRESS" opaque 0
 else
     MON=$(hyprctl monitors -j | jq -r '.[0] | "\(.width) \(.height) \(.scale)"')
     MON_W=$(echo "$MON" | cut -d' ' -f1)
@@ -34,12 +31,8 @@ else
 
     hyprctl dispatch togglefloating
     hyprctl dispatch pin
-    hyprctl dispatch tagwindow PIP   # tag ventana PIP
     hyprctl dispatch resizeactive exact $PIP_W $PIP_H
     hyprctl dispatch moveactive exact $X $Y
     # Forzar opacidad 1.0 aunque la ventana pierda el foco
-    hyprctl setprop address:$ADDRESS activeopacity 1.0
-    hyprctl setprop address:$ADDRESS inactiveopacity 1.0
-    hyprctl setprop address:$ADDRESS alpha 1.0
-    hyprctl setprop address:$ADDRESS alphainactive 1.0
+    hyprctl dispatch setprop "address:$ADDRESS" opaque 1
 fi
