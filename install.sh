@@ -102,6 +102,19 @@ PKGS_PACMAN=(
     # Media
     playerctl
 
+    # Reproductor de video / audio
+    mpv
+
+    # Visor de imágenes
+    imv
+    feh
+
+    # Visor de PDF
+    zathura
+
+    # Archivos comprimidos
+    unar
+
     # Monitor de recursos
     btop
 

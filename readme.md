@@ -21,13 +21,39 @@ Configuración de escritorio Linux con tema **Cyberpunk Red**: fondos negros pro
 | Barra de estado | [Waybar](https://github.com/Alexays/Waybar) |
 | Lanzador de apps | [Rofi](https://github.com/davatorium/rofi) |
 | Terminal | [Kitty](https://sw.kovidgoyal.net/kitty/) |
-| Gestor de archivos (GUI) | Nautilus |
 | Gestor de archivos (TUI) | [Yazi](https://yazi-rs.github.io/) |
 | Editor | [Neovim](https://neovim.io/) |
 | Fondo de pantalla | [Hyprpaper](https://github.com/hyprwm/hyprpaper) |
 | Notificaciones | [SwayNC](https://github.com/ErikReider/SwayNotificationCenter) |
+| OSD (volumen/brillo) | [SwayOSD](https://github.com/ErikReider/SwayOSD) |
 | Visualizador de audio | [Cava](https://github.com/karlstav/cava) |
 | Discos externos | [udiskie](https://github.com/coldfix/udiskie) |
+
+---
+
+## Herramientas del sistema
+
+Aplicaciones predeterminadas para cada tipo de contenido:
+
+| Uso | Aplicación | Notas |
+|---|---|---|
+| Terminal | **Kitty** | Emulador de terminal principal |
+| Gestor de archivos | **Yazi** | TUI, se abre con `Super+E` |
+| Editor de texto | **Neovim** | Configurado con lazy.nvim |
+| Visor de imágenes | **imv** | Ligero, nativo Wayland |
+| Visor de imágenes (fallback) | **feh** | Alternativa si imv no está disponible |
+| Reproductor de video | **mpv** | Reproductor universal |
+| Reproductor de audio | **mpv** (sin video) | Para archivos de audio |
+| Visor de PDF | **Zathura** | Minimalista, con teclado |
+| Archivos comprimidos | **unar** | Extracción automática en Yazi |
+| Captura de pantalla | **grim + slurp** | `Print` pantalla completa, `Super+Shift+P` selección |
+| Portapapeles | **wl-clipboard** | `wl-copy` / `wl-paste` |
+| Control de audio | **PipeWire + WirePlumber** | Stack de audio moderno |
+| Control de bluetooth | **bluetoothctl** + **btmenu** | Menú rofi con `Super+B` |
+| Control de red | **NetworkManager** + **wifimenu** | Menú rofi con `Super+W` |
+| Brillo | **brightnessctl** | Teclas XF86 o swayosd-client |
+| Monitor de recursos | **btop** | Interfaz TUI |
+| Ls moderno | **lsd** | Reemplaza `ls` con colores e íconos |
 
 ---
 
@@ -150,7 +176,8 @@ sudo pacman -S hyprland hyprpaper hypridle hyprlock waybar kitty \
                rofi-wayland swaync neovim yazi udiskie lsd \
                playerctl brightnessctl grim slurp wl-clipboard \
                wireplumber pipewire pipewire-pulse pavucontrol \
-               bluez bluez-utils networkmanager btop
+               bluez bluez-utils networkmanager btop \
+               mpv imv feh zathura unar
 
 # AUR (yay / paru)
 yay -S cava hyprshade wlogout
