@@ -141,6 +141,7 @@ PKGS_AUR=(
     # Wallpaper extra / utilidades Hyprland
     hyprshade
     wlogout
+    swayosd-git
 )
 
 info "Instalando paquetes oficiales..."
@@ -189,6 +190,7 @@ link_config nvim
 link_config yazi
 link_config udiskie
 link_config swaync
+link_config swayosd
 link_config lsd
 link_config ranger
 
@@ -200,7 +202,10 @@ chmod +x "$DOTFILES_DIR/hypr/scripts/"*.sh 2>/dev/null && \
 
 chmod +x "$DOTFILES_DIR/util/bluetooth/btmenu" \
          "$DOTFILES_DIR/util/wifi/wifimenu" \
-         "$DOTFILES_DIR/util/udiskie/"*.sh 2>/dev/null && \
+         "$DOTFILES_DIR/util/udiskie/"*.sh \
+         "$DOTFILES_DIR/util/sftp/"*.sh \
+         "$DOTFILES_DIR/util/capslock/"*.sh \
+         "$DOTFILES_DIR/util/calendar/"*.py 2>/dev/null && \
     success "util/ → ejecutables"
 
 # ── Directorio de imágenes ────────────────────────────────────
