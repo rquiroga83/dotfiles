@@ -88,17 +88,17 @@ desc = "Ordenar por fecha (más reciente primero)"
 # Ir a Google Drive
 [[mgr.prepend_keymap]]
 on  = ["g", "d"]
-run = "cd ~/mnt/gdrive"
+run = "cd ~/gdrive"
 desc = "Ir a Google Drive"
 
 # Montar Google Drive
 [[mgr.prepend_keymap]]
 on  = ["m", "g"]
-run = 'shell --block --confirm "mkdir -p ~/mnt/gdrive && rclone mount gdrive: ~/mnt/gdrive --vfs-cache-mode full --vfs-cache-max-age 1h --vfs-cache-max-size 10G --daemon"'
+run = 'shell --block --confirm "mkdir -p ~/gdrive && rclone mount gdrive: ~/gdrive --vfs-cache-mode full --vfs-cache-max-age 1h --vfs-cache-max-size 10G --daemon"'
 desc = "Montar Google Drive"
 
 # Desmontar Google Drive
 [[mgr.prepend_keymap]]
 on  = ["m", "u"]
-run = 'shell --block --confirm "fusermount3 -u ~/mnt/gdrive"'
+run = 'shell --block --confirm "fusermount3 -u ~/gdrive"'
 desc = "Desmontar Google Drive"

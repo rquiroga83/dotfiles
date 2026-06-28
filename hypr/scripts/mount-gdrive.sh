@@ -1,7 +1,7 @@
 #!/bin/bash
 # Montar Google Drive con rclone (bajo demanda + auto-limpieza)
 
-MOUNTPoint="$HOME/mnt/gdrive"
+MOUNTPoint="$HOME/gdrive"
 REMOTE="gdrive:"
 
 mkdir -p "$MOUNTPoint"
