@@ -2,7 +2,7 @@
 # Detecta unidades montadas bajo /run/media (siempre son removibles)
 
 DRIVES=$(lsblk -o NAME,MOUNTPOINT,LABEL -rn 2>/dev/null | \
-  awk '$2 ~ /\/run\/media/ {
+  awk '$2 ~ /\/home\/andres\/media/ {
     label = ($3 != "") ? $3 : $1
     gsub(/\\x20/, " ", label)
     print label

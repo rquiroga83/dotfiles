@@ -141,6 +141,13 @@ dotfiles/
 - Íconos Papirus · Modos: run, drun, window
 - Texto seleccionado: fondo rojo + texto negro
 
+### Udiskie
+- Automontaje de discos externos USB
+- Monta en `/home/andres/media/` (vía enlace simbólico `/run/media/andres`)
+- Icono en waybar muestra cantidad de discos montados
+- Click derecho en waybar: menú para expulsar discos con rofi
+- **Requiere enlace simbólico**: `sudo ln -s /home/andres/media /run/media/andres`
+
 ---
 
 ## Instalación

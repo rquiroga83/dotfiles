@@ -287,6 +287,20 @@ window#waybar.hidden {
   font-weight: bold;
 }
 
+/* ── MPRIS (control de reproducción) ────────────────── */
+#mpris {
+  margin: 5px 0px 5px 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+  transition: none;
+  color: #4a9eff;
+  font-weight: bold;
+}
+
+#mpris.paused {
+  color: #6cb4ee;
+}
+
 /* ── Tooltips ───────────────────────────────────────── */
 tooltip {
   background: linear-gradient(135deg, transparent 8px, #0a0000 8px);

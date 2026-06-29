@@ -2,7 +2,7 @@
 # Lista unidades bajo /run/media y permite expulsarlas con rofi
 
 DRIVES=$(lsblk -o NAME,MOUNTPOINT,LABEL,SIZE -rn 2>/dev/null | \
-  awk '$2 ~ /\/run\/media/ {
+  awk '$2 ~ /\/home\/andres\/media/ {
     gsub(/\\x20/, " ", $3)
     printf "/dev/%s\t%s\t%s\t%s\n", $1, $2, $3, $4
   }')
