@@ -1,2 +1,5 @@
 .claude/
 CLAUDE.md
+
+# Configuración local de Hyprland (dependiente del equipo)
+hypr/local.conf
