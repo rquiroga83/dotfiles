@@ -23,8 +23,8 @@
   //"modules-center": ["cpu","temperature","memory","disk"],
   //"modules-right":["cava","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
   "modules-left": ["custom/launcher", "hyprland/workspaces", "wlr/taskbar", "mpris", "cava"],
-  "modules-center": ["privacy","custom/capslock","custom/udiskie"],
-  "modules-right":["cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","custom/clock","custom/notification","custom/power"],
+  "modules-center": ["privacy"],
+  "modules-right":["custom/capslock","custom/udiskie","cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","custom/clock","custom/notification","custom/power"],
 
   // Modules Definition
   "custom/launcher" : {

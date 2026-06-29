@@ -45,7 +45,7 @@ video = [
 
 # Audio → mpv (sin ventana, detiene reproducción anterior, MPRIS habilitado)
 audio = [
-  { run = 'pkill mpv; mpv --no-video --player-operation-mode=pseudo-gui "$@"', desc = "mpv (audio)", orphan = true, for = "unix" }
+  { run = 'pkill mpv; mpv --no-video --no-terminal "$@"', desc = "mpv (audio)", orphan = true, for = "unix" }
 ]
 
 # Archivos comprimidos → extraer en directorio actual
