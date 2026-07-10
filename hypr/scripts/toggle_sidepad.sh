@@ -1,13 +1,13 @@
 #!/bin/bash
-# toggle_sidepad.sh — sidepad lateral izquierdo estilo ML4W
+# toggle_sidepad.sh — sidepad lateral derecho estilo ML4W
 # Ventana siempre abierta: oculta = fuera de pantalla, visible = dentro
 
 CLASS="sidepad-terminal"
 STATE_FILE="/tmp/sidepad-visible"
 WIDTH=650
-VISIBLE_GAP=20    # px desde el borde izquierdo al mostrarse
-TOP_GAP=60        # px desde arriba (deja espacio para waybar)
-BOTTOM_GAP=20
+VISIBLE_GAP=-760   # 0=borde derecho alineado con pantalla, negativo=sale fuera, positivo=entra
+TOP_GAP=55        # px desde arriba (deja espacio para waybar)
+BOTTOM_GAP=15
 
 # ── Kill mode ────────────────────────────────────────────────
 if [ "$1" = "--kill" ]; then
@@ -17,14 +17,15 @@ if [ "$1" = "--kill" ]; then
 fi
 
 # ── Geometría del monitor activo ─────────────────────────────
-read -r MON_H < <(hyprctl monitors -j | python3 -c "
+read -r MON_W MON_H < <(hyprctl monitors -j | python3 -c "
 import json, sys
 monitors = json.load(sys.stdin)
 focused = next((m for m in monitors if m.get('focused')), monitors[0])
-print(focused['height'])
+print(focused['width'], focused['height'])
 ")
 WIN_H=$(( MON_H - TOP_GAP - BOTTOM_GAP ))
-HIDDEN_X=$(( -(WIDTH - 8) ))   # casi fuera de pantalla, 8px de "pestaña" visible
+VISIBLE_X=$(( MON_W - WIDTH - VISIBLE_GAP ))  # posición visible a la derecha
+HIDDEN_X=$(( MON_W + WIDTH + 105 ))             # fuera de pantalla a la derecha
 
 client_exists() {
     hyprctl clients -j | grep -q "\"$CLASS\""
@@ -32,7 +33,7 @@ client_exists() {
 
 show_pad() {
     hyprctl dispatch resizewindowpixel "exact ${WIDTH} ${WIN_H},class:${CLASS}"
-    hyprctl dispatch movewindowpixel  "exact ${VISIBLE_GAP} ${TOP_GAP},class:${CLASS}"
+    hyprctl dispatch movewindowpixel  "exact ${VISIBLE_X} ${TOP_GAP},class:${CLASS}"
     echo "1" > "$STATE_FILE"
 }
 

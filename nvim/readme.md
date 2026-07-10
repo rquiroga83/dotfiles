@@ -174,6 +174,9 @@ La sesión se guarda automáticamente al salir de Neovim y se restaura al reabri
 | Tecla | Acción |
 |---|---|
 | `dd` | Eliminar línea |
+| `d` | Cortar selección (modo visual) |
+| `v` | Modo visual (selección) |
+| `V` | Modo visual (líneas completas) |
 | `yy` | Copiar línea |
 | `p` | Pegar después |
 | `P` | Pegar antes |

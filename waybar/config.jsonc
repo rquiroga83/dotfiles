@@ -12,8 +12,8 @@
   "layer": "top",
   "include": "~/.config/waybar/local.jsonc",
   "margin-top": 5,
-  "margin-left": 13,
-  "margin-right": 13,
+  "margin-left": 10,
+  "margin-right": 10,
 
   // ░█▄█░█▀█░█▀▄░█░█░█░░░█▀▀░█▀▀
   // ░█░█░█░█░█░█░█░█░█░░░█▀▀░▀▀█
@@ -24,7 +24,7 @@
   //"modules-right":["cava","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
   "modules-left": ["custom/launcher", "hyprland/workspaces", "wlr/taskbar", "mpris", "cava"],
   "modules-center": ["privacy"],
-  "modules-right":["custom/capslock","custom/udiskie","cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","custom/clock","custom/notification","custom/power"],
+  "modules-right":["custom/capslock","custom/udiskie","custom/aura","cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","custom/clock","custom/notification","custom/power"],
 
   // Modules Definition
   "custom/launcher" : {
@@ -227,6 +227,14 @@
     "interval": 10,
     "tooltip": true,
     "on-click": "~/dotfiles/util/udiskie/udisks-eject.sh"
+  },
+
+  "custom/aura": {
+    "exec": "~/dotfiles/util/aura/aura-status.sh",
+    "return-type": "json",
+    "interval": 5,
+    "tooltip": true,
+    "on-click": "~/dotfiles/util/aura/aura-toggle.sh"
   },
 
    "bluetooth": {
