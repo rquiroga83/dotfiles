@@ -51,6 +51,9 @@ headerbar .title { font-weight: bold; }
 headerbar .titlebutton { min-width: 18px; min-height: 18px; padding: 4px; margin: 9px 3px; border-radius: 0; background-color: transparent; }
 headerbar .titlebutton:hover { background-color: alpha(@theme_fg_color, 0.15); }
 headerbar .titlebutton.close:hover { background-color: @error_color; color: @theme_selected_fg_color; }
+headerbar button { background-color: transparent; border-color: transparent; }
+headerbar button:hover { background-color: alpha(@theme_fg_color, 0.1); border-color: transparent; }
+headerbar button:active, headerbar button:checked { background-color: alpha(@theme_selected_bg_color, 0.2); border-color: transparent; }
 
 button { background-color: @theme_module_color; color: @theme_fg_color; border: 1px solid @borders; border-radius: 0; padding: 5px 16px; min-height: 24px; }
 button:hover { background-color: @theme_raised_color; border-color: @theme_selected_bg_color; }
