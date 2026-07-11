@@ -95,26 +95,22 @@ window:backdrop { background-color: @window_bg_color; color: @dim_label; }
 decoration { border-radius: 0; box-shadow: 0 0 0 1px @borders, 0 4px 16px rgba(0,0,0,0.8); }
 decoration:backdrop { box-shadow: 0 0 0 1px alpha(@borders, 0.5), 0 2px 8px rgba(0,0,0,0.5); }
 
-/* ---- headerbar / windowhandle: corte diagonal 10px como la waybar ---- */
+/* ---- headerbar / windowhandle: plana y cuadrada (el recorte diagonal solo
+   funciona en layer-shell como waybar/swaync; en una ventana real deja un
+   hueco vacio porque Hyprland dibuja el borde sobre el rectangulo completo) ---- */
 headerbar, .titlebar {
-  background:
-    linear-gradient(135deg, transparent 10px, @headerbar_bg_color 10px) top left  / 51% 100% no-repeat,
-    linear-gradient(225deg, transparent 10px, @headerbar_bg_color 10px) top right / 51% 100% no-repeat;
+  background-color: @headerbar_bg_color;
   color: @headerbar_fg_color;
   border-bottom: 1px solid @borders;
   border-radius: 0;
   padding: 0 8px;
   min-height: 46px;
 }
-headerbar:backdrop, .titlebar:backdrop {
-  background:
-    linear-gradient(135deg, transparent 10px, @headerbar_backdrop_color 10px) top left  / 51% 100% no-repeat,
-    linear-gradient(225deg, transparent 10px, @headerbar_backdrop_color 10px) top right / 51% 100% no-repeat;
-  color: @dim_label;
-}
+headerbar:backdrop, .titlebar:backdrop { background-color: @headerbar_backdrop_color; color: @dim_label; }
 headerbar windowtitle, windowtitle.title { font-weight: bold; }
 headerbar windowtitle.subtitle { font-size: 85%; color: @dim_label; }
 
+headerbar button, headerbar .linked { margin: 7px 2px; }
 windowcontrols button.titlebutton { min-width: 18px; min-height: 18px; padding: 4px; border-radius: 0; background-color: transparent; }
 windowcontrols button.titlebutton:hover { background-color: alpha(@window_fg_color, 0.15); }
 windowcontrols button.close:hover { background-color: @destructive_color; color: @window_bg_color; }
@@ -163,7 +159,8 @@ searchbar, .search-bar { background-color: @headerbar_bg_color; border-bottom: 1
 searchentry, entry.search { border-radius: 0; }
 
 /* ---- labels ---- */
-label { color: @window_fg_color; }
+/* Sin "label { color }" generico: heredar del contenedor para no pisarle
+   el color a apps de terceros (ej. waybar) que fijan color en el padre. */
 label:disabled { color: @insensitive_fg; }
 label.dim-label, .dim-label { opacity: 0.55; }
 label:link, label.link { color: @link_color; }
@@ -225,13 +222,13 @@ navigation-sidebar row:selected, .sidebar row:selected { background-color: alpha
 toolbar, .toolbar { background-color: @headerbar_bg_color; border-bottom: 1px solid @borders; padding: 4px; }
 actionbar, .action-bar { background-color: @headerbar_bg_color; border-top: 1px solid @borders; padding: 6px; }
 
-/* ---- menus / popovers: corte diagonal 8px como los modulos de waybar ---- */
+/* ---- menus / popovers ---- */
 popover, popover.background, popover.menu { background: none; }
 popover > contents, popover.background > contents, popover.menu > contents {
-  background: linear-gradient(135deg, transparent 8px, @popover_bg_color 8px) top / 100% 100% no-repeat;
+  background-color: @popover_bg_color;
   color: @popover_fg_color;
-  border: none;
-  box-shadow: 0 0 0 1px @borders, 0 4px 16px rgba(0,0,0,0.7);
+  border: 1px solid @borders;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   border-radius: 0;
   padding: 6px;
 }
@@ -287,10 +284,11 @@ infobar.error, banner.error { background-color: alpha(@error_color, 0.15); borde
 banner revealer widget { color: @window_fg_color; }
 
 toast {
-  background: linear-gradient(135deg, transparent 8px, @popover_bg_color 8px) top / 100% 100% no-repeat;
+  background-color: @popover_bg_color;
   color: @popover_fg_color;
   border-radius: 0;
-  box-shadow: 0 0 0 1px @borders, 0 4px 16px rgba(0,0,0,0.7);
+  border: 1px solid @borders;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   padding: 4px;
 }
 toast button { color: @accent_color; }
