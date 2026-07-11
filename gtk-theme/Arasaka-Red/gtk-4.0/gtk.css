@@ -110,7 +110,6 @@ headerbar:backdrop, .titlebar:backdrop { background-color: @headerbar_backdrop_c
 headerbar windowtitle, windowtitle.title { font-weight: bold; }
 headerbar windowtitle.subtitle { font-size: 85%; color: @dim_label; }
 
-headerbar button, headerbar .linked { margin: 7px 2px; }
 windowcontrols button.titlebutton { min-width: 18px; min-height: 18px; padding: 4px; border-radius: 0; background-color: transparent; }
 windowcontrols button.titlebutton:hover { background-color: alpha(@window_fg_color, 0.15); }
 windowcontrols button.close:hover { background-color: @destructive_color; color: @window_bg_color; }
