@@ -1,0 +1,216 @@
+/* Arasaka Red - GTK3 Theme
+   Paleta y lenguaje visual: /desing_guide.md (Cyberpunk Red)
+   Sin esquinas redondeadas. Superficies grandes (headerbar, menus,
+   popovers) usan el corte diagonal del design guide; los controles
+   atomicos (botones, entradas, switches...) van a 90 grados. */
+
+@define-color theme_bg_color #0a0000;
+@define-color theme_module_color #1a0000;
+@define-color theme_raised_color #2b0000;
+@define-color theme_fg_color #ffcccc;
+@define-color theme_base_color #1a0000;
+@define-color theme_text_color #ffcccc;
+@define-color theme_selected_bg_color #ff003c;
+@define-color theme_selected_fg_color #0a0000;
+@define-color theme_tooltip_bg_color #0a0000;
+@define-color theme_tooltip_fg_color #ff003c;
+@define-color borders #660000;
+@define-color error_color #ff003c;
+@define-color warning_color #fcee0a;
+@define-color success_color #00cfff;
+@define-color link_color #ff003c;
+@define-color insensitive_bg #1a0000;
+@define-color insensitive_fg #660000;
+@define-color dim_label alpha(#ffcccc, 0.55);
+@define-color cyan #00cfff;
+@define-color cyan_dim #003a4d;
+@define-color yellow #fcee0a;
+@define-color yellow_dim #7a6e00;
+
+* { outline-color: alpha(@theme_selected_bg_color, 0.5); -gtk-icon-style: symbolic; }
+
+window, .background { background-color: @theme_bg_color; color: @theme_fg_color; }
+window:backdrop { background-color: @theme_bg_color; color: @dim_label; }
+
+decoration { border-radius: 0; box-shadow: 0 0 0 1px @borders, 0 4px 16px rgba(0,0,0,0.8); }
+decoration:backdrop { box-shadow: 0 0 0 1px alpha(@borders, 0.5), 0 2px 8px rgba(0,0,0,0.5); }
+
+/* Barra de titulo: esquinas superiores cortadas 10px, como la waybar */
+headerbar, .titlebar {
+  background:
+    linear-gradient(135deg, transparent 10px, @theme_module_color 10px) top left  / 51% 100% no-repeat,
+    linear-gradient(225deg, transparent 10px, @theme_module_color 10px) top right / 51% 100% no-repeat;
+  border-bottom: 1px solid @borders;
+  border-radius: 0;
+  padding: 0 8px;
+  min-height: 42px;
+  color: @theme_fg_color;
+}
+headerbar:backdrop, .titlebar:backdrop {
+  background:
+    linear-gradient(135deg, transparent 10px, @theme_bg_color 10px) top left  / 51% 100% no-repeat,
+    linear-gradient(225deg, transparent 10px, @theme_bg_color 10px) top right / 51% 100% no-repeat;
+  color: @dim_label;
+}
+headerbar .title { font-weight: bold; }
+headerbar .titlebutton { min-width: 18px; min-height: 18px; padding: 4px; border-radius: 0; background-color: transparent; }
+headerbar .titlebutton:hover { background-color: alpha(@theme_fg_color, 0.15); }
+headerbar .titlebutton.close:hover { background-color: @error_color; color: @theme_selected_fg_color; }
+
+button { background-color: @theme_module_color; color: @theme_fg_color; border: 1px solid @borders; border-radius: 0; padding: 5px 16px; min-height: 24px; }
+button:hover { background-color: @theme_raised_color; border-color: @theme_selected_bg_color; }
+button:active, button:checked { background-color: @theme_selected_bg_color; color: @theme_selected_fg_color; border-color: @theme_selected_bg_color; }
+button:disabled { background-color: @insensitive_bg; color: @insensitive_fg; border-color: @insensitive_fg; }
+button.flat { background-color: transparent; border-color: transparent; }
+button.flat:hover { background-color: alpha(@theme_fg_color, 0.1); }
+button.flat:active, button.flat:checked { background-color: alpha(@theme_selected_bg_color, 0.2); }
+button.suggested-action { background-color: @theme_selected_bg_color; color: @theme_selected_fg_color; border-color: @theme_selected_bg_color; font-weight: bold; }
+button.suggested-action:hover { background-color: shade(@theme_selected_bg_color, 1.15); }
+button.destructive-action { background-color: @theme_module_color; color: @error_color; border: 1px solid @error_color; font-weight: bold; }
+button.destructive-action:hover { background-color: @error_color; color: @theme_selected_fg_color; }
+button.circular { border-radius: 0; min-width: 32px; min-height: 32px; }
+button.linked:not(:first-child) { border-left: none; }
+
+entry, spinbutton { background-color: @theme_base_color; color: @theme_text_color; border: 1px solid @borders; border-radius: 0; padding: 6px 10px; caret-color: @theme_selected_bg_color; }
+entry:focus, spinbutton:focus { border-color: @theme_selected_bg_color; box-shadow: 0 0 0 1px alpha(@theme_selected_bg_color, 0.5); }
+entry:disabled, spinbutton:disabled { background-color: @insensitive_bg; color: @insensitive_fg; }
+entry selection { background-color: alpha(@theme_selected_bg_color, 0.4); color: @theme_fg_color; }
+entry.error { border-color: @error_color; }
+entry.warning { border-color: @warning_color; }
+
+label { color: @theme_fg_color; }
+label:disabled { color: @insensitive_fg; }
+label.dim-label { color: @dim_label; }
+label:link { color: @link_color; }
+
+switch { min-width: 48px; min-height: 24px; border-radius: 0; background-color: @theme_module_color; border: 1px solid @borders; }
+switch:checked { background-color: @theme_selected_bg_color; border-color: shade(@theme_selected_bg_color, 0.85); }
+switch slider { min-width: 20px; min-height: 20px; border-radius: 0; background-color: @theme_fg_color; margin: 1px; }
+switch:checked slider { background-color: @theme_selected_fg_color; }
+
+check, radio { min-width: 18px; min-height: 18px; background-color: @theme_base_color; border: 1px solid @borders; }
+check { border-radius: 0; }
+radio { border-radius: 0; }
+check:hover, radio:hover { border-color: @theme_selected_bg_color; }
+check:checked, radio:checked { background-color: @theme_selected_bg_color; border-color: @theme_selected_bg_color; color: @theme_selected_fg_color; }
+check:indeterminate, radio:indeterminate { background-color: @theme_selected_bg_color; border-color: @theme_selected_bg_color; color: @theme_selected_fg_color; }
+
+scrollbar slider { min-width: 6px; min-height: 6px; border-radius: 0; background-color: alpha(@cyan, 0.35); }
+scrollbar slider:hover { background-color: alpha(@cyan, 0.6); min-width: 8px; }
+scrollbar slider:active { background-color: @cyan; }
+
+list, .list { background-color: @theme_base_color; }
+row { padding: 4px 8px; }
+row:hover { background-color: @theme_raised_color; }
+row:selected { background-color: alpha(@theme_selected_bg_color, 0.3); }
+
+.sidebar, placessidebar { background-color: @theme_module_color; border-right: 1px solid @borders; }
+.sidebar row, placessidebar row { border-radius: 0; margin: 0; }
+.sidebar row:selected, placessidebar row:selected { background-color: alpha(@theme_selected_bg_color, 0.25); }
+
+toolbar { background-color: @theme_module_color; border-bottom: 1px solid @borders; padding: 4px; }
+
+/* Menus / popovers: corte diagonal 8px como los modulos de waybar */
+.menu, .menuitem, .context-menu {
+  background: linear-gradient(135deg, transparent 8px, @theme_module_color 8px) top / 100% 100% no-repeat;
+  border: none;
+  box-shadow: 0 0 0 1px @borders, 0 4px 16px rgba(0,0,0,0.7);
+  border-radius: 0;
+  padding: 4px 0;
+}
+.menuitem { min-height: 28px; padding: 4px 8px; color: @theme_fg_color; }
+.menuitem:hover { background-color: alpha(@theme_selected_bg_color, 0.25); }
+.menuitem:disabled { color: @insensitive_fg; }
+.menuitem accelerator { color: @dim_label; }
+
+popover, popover.background {
+  background: linear-gradient(135deg, transparent 8px, @theme_module_color 8px) top / 100% 100% no-repeat;
+  border: none;
+  box-shadow: 0 0 0 1px @borders, 0 4px 16px rgba(0,0,0,0.7);
+  border-radius: 0;
+  padding: 8px;
+}
+
+notebook > header { background-color: @theme_bg_color; border-color: @borders; }
+notebook > header tab { min-height: 28px; padding: 4px 12px; color: @dim_label; }
+notebook > header tab:hover { color: @theme_fg_color; background-color: @theme_raised_color; }
+notebook > header tab:checked { color: @theme_fg_color; background-color: @theme_module_color; border-bottom: 2px solid @theme_selected_bg_color; }
+notebook > stack { background-color: @theme_bg_color; border: 1px solid @borders; }
+
+scale trough { min-height: 6px; min-width: 6px; border-radius: 0; background-color: @theme_module_color; border: 1px solid @borders; }
+scale highlight { min-height: 6px; min-width: 6px; border-radius: 0; background-color: @theme_selected_bg_color; }
+scale slider { min-height: 16px; min-width: 16px; border-radius: 0; background-color: @theme_fg_color; border: 1px solid @theme_selected_bg_color; }
+scale slider:hover { background-color: @theme_selected_bg_color; }
+scale slider:active { background-color: @theme_selected_bg_color; box-shadow: 0 0 0 3px alpha(@theme_selected_bg_color, 0.3); }
+
+progressbar trough { min-height: 6px; min-width: 6px; border-radius: 0; background-color: @theme_module_color; border: 1px solid @borders; }
+progressbar progress { min-height: 6px; min-width: 6px; border-radius: 0; background-color: @theme_selected_bg_color; }
+
+levelbar trough { min-height: 6px; min-width: 6px; border-radius: 0; background-color: @theme_module_color; border: 1px solid @borders; }
+levelbar block.filled { background-color: @theme_selected_bg_color; }
+levelbar block.empty { background-color: transparent; }
+levelbar block.low { background-color: @warning_color; }
+levelbar block.high { background-color: @theme_selected_bg_color; }
+levelbar block.full { background-color: @success_color; }
+
+/* Infobar / urgencia: mismo esquema low=cyan, normal=yellow, critical=red que dunst */
+infobar.info { background-color: alpha(@cyan, 0.15); border-left: 3px solid @cyan; }
+infobar.warning { background-color: alpha(@warning_color, 0.15); border-left: 3px solid @warning_color; }
+infobar.error { background-color: alpha(@error_color, 0.15); border-left: 3px solid @error_color; }
+
+tooltip, tooltip.background { border-radius: 0; padding: 4px 8px; background-color: @theme_tooltip_bg_color; color: @theme_tooltip_fg_color; border: 1px solid @theme_selected_bg_color; }
+
+treeview.view { background-color: @theme_base_color; color: @theme_fg_color; }
+treeview.view header button { background-color: @theme_module_color; border-color: @borders; color: @theme_fg_color; padding: 4px 8px; }
+treeview.view:selected { background-color: alpha(@theme_selected_bg_color, 0.3); }
+
+columnview { background-color: @theme_base_color; }
+columnview > header > button { background-color: @theme_module_color; border-color: @borders; color: @theme_fg_color; }
+columnview > listview > row:hover { background-color: @theme_raised_color; }
+columnview > listview > row:selected { background-color: alpha(@theme_selected_bg_color, 0.3); }
+
+combobox button { border-radius: 0; }
+combobox arrow { min-width: 16px; min-height: 16px; color: @theme_fg_color; }
+
+expander arrow { min-width: 16px; min-height: 16px; color: @theme_fg_color; }
+expander arrow:checked { color: @theme_selected_bg_color; }
+
+frame > border { border: 1px solid @borders; border-radius: 0; }
+frame > label { color: @theme_selected_bg_color; font-weight: bold; padding: 0 6px; }
+
+separator { background-color: @borders; min-width: 1px; min-height: 1px; }
+
+statusbar { color: @dim_label; padding: 4px 8px; }
+
+calendar { background-color: @theme_base_color; color: @theme_fg_color; border: 1px solid @borders; border-radius: 0; padding: 4px; }
+calendar:selected { background-color: @theme_selected_bg_color; color: @theme_selected_fg_color; border-radius: 0; }
+calendar.header { background-color: @theme_module_color; border-bottom: 1px solid @borders; border-radius: 0; }
+
+colorswatch { border-radius: 0; border: 1px solid @borders; }
+colorswatch:hover { border-color: @theme_fg_color; }
+colorswatch.dark overlay { color: white; }
+colorswatch.light overlay { color: black; }
+
+filechooser .path-bar button { background-color: transparent; border: none; border-radius: 0; color: @theme_fg_color; }
+filechooser .path-bar button:hover { background-color: @theme_raised_color; }
+filechooser .path-bar button:checked { background-color: alpha(@theme_selected_bg_color, 0.2); color: @theme_selected_bg_color; }
+
+stackswitcher button { border-radius: 0; }
+stackswitcher button:checked { background-color: @theme_selected_bg_color; color: @theme_selected_fg_color; }
+
+.view { background-color: @theme_base_color; color: @theme_fg_color; }
+.view:selected { background-color: alpha(@theme_selected_bg_color, 0.3); }
+
+textview text { background-color: @theme_base_color; color: @theme_text_color; padding: 8px; }
+textview text selection { background-color: alpha(@theme_selected_bg_color, 0.4); }
+
+scrollbar { background-color: @theme_bg_color; }
+
+.sidebar button { background-color: transparent; border: none; border-radius: 0; color: @theme_fg_color; padding: 6px 12px; }
+.sidebar button:hover { background-color: @theme_raised_color; }
+.sidebar button:checked { background-color: alpha(@theme_selected_bg_color, 0.2); color: @theme_fg_color; }
+
+headerbar button.flat { background-color: transparent; border-color: transparent; color: @theme_fg_color; }
+headerbar button.flat:hover { background-color: alpha(@theme_fg_color, 0.1); }
+
+messagedialog .titlebar { background-color: @theme_module_color; border-bottom: 1px solid @borders; min-height: 20px; padding: 8px; }
