@@ -175,13 +175,30 @@ switch:disabled { opacity: 0.5; }
 switch slider { min-width: 20px; min-height: 20px; border-radius: 0; background-color: @window_fg_color; margin: 1px; transition: background-color 150ms ease; }
 switch:checked slider { background-color: @accent_fg_color; }
 
-/* ---- check / radio ---- */
-checkbutton check, radiobutton radio, check, radio { min-width: 18px; min-height: 18px; background-color: @view_bg_color; border: 1px solid @borders; }
-check { border-radius: 0; }
-radio { border-radius: 0; }
-check:hover, radio:hover { border-color: @accent_color; }
-check:checked, radio:checked, check:indeterminate, radio:indeterminate { background-color: @accent_color; border-color: @accent_color; color: @accent_fg_color; }
-check:disabled, radio:disabled { border-color: @insensitive_fg; opacity: 0.5; }
+/* ---- check / radio: iconos SVG propios en ../assets/ (ver gtk-3.0/gtk.css
+   para el origen; -gtk-icon-source sigue soportado en GTK4). ---- */
+check, radio { min-width: 18px; min-height: 18px; background-image: none; background-color: transparent; border: none; box-shadow: none; }
+
+check { -gtk-icon-source: url("../assets/checkbox-unchecked-dark.svg"); }
+check:disabled { -gtk-icon-source: url("../assets/checkbox-unchecked-insensitive-dark.svg"); }
+check:checked { -gtk-icon-source: url("../assets/checkbox-checked-dark.svg"); }
+check:checked:disabled { -gtk-icon-source: url("../assets/checkbox-checked-insensitive-dark.svg"); }
+check:indeterminate { -gtk-icon-source: url("../assets/checkbox-mixed-dark.svg"); }
+check:indeterminate:disabled { -gtk-icon-source: url("../assets/checkbox-mixed-insensitive-dark.svg"); }
+
+radio { -gtk-icon-source: url("../assets/radio-unchecked-dark.svg"); }
+radio:disabled { -gtk-icon-source: url("../assets/radio-unchecked-insensitive-dark.svg"); }
+radio:checked { -gtk-icon-source: url("../assets/radio-checked-dark.svg"); }
+radio:checked:disabled { -gtk-icon-source: url("../assets/radio-checked-insensitive-dark.svg"); }
+radio:indeterminate { -gtk-icon-source: url("../assets/radio-mixed-dark.svg"); }
+radio:indeterminate:disabled { -gtk-icon-source: url("../assets/radio-mixed-insensitive-dark.svg"); }
+
+popover.menu modelbutton.check, modelbutton.check { -gtk-icon-source: url("../assets/menuitem-checkbox-unchecked.svg"); }
+popover.menu modelbutton.check:checked, modelbutton.check:checked { -gtk-icon-source: url("../assets/menuitem-checkbox-checked.svg"); }
+popover.menu modelbutton.check:checked:hover, modelbutton.check:checked:hover { -gtk-icon-source: url("../assets/menuitem-checkbox-checked-hover.svg"); }
+popover.menu modelbutton.radio, modelbutton.radio { -gtk-icon-source: url("../assets/menuitem-radio-unchecked.svg"); }
+popover.menu modelbutton.radio:checked, modelbutton.radio:checked { -gtk-icon-source: url("../assets/menuitem-radio-checked.svg"); }
+popover.menu modelbutton.radio:checked:hover, modelbutton.radio:checked:hover { -gtk-icon-source: url("../assets/menuitem-radio-checked-hover.svg"); }
 
 /* ---- scrollbar: cyan (chrome de sistema, no rojo de accion) ---- */
 scrollbar { background-color: transparent; }
