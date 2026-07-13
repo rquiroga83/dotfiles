@@ -86,7 +86,7 @@
 @define-color yellow #fcee0a;
 @define-color yellow_dim #7a6e00;
 
-* { outline-color: alpha(@accent_color, 0.5); -gtk-icon-style: symbolic; }
+* { outline-color: alpha(@accent_color, 0.5); }
 
 /* ---- window ---- */
 window, .background { background-color: @window_bg_color; color: @window_fg_color; }
@@ -113,6 +113,41 @@ headerbar windowtitle.subtitle { font-size: 85%; color: @dim_label; }
 windowcontrols button.titlebutton { min-width: 18px; min-height: 18px; padding: 4px; border-radius: 0; background-color: transparent; }
 windowcontrols button.titlebutton:hover { background-color: alpha(@window_fg_color, 0.15); }
 windowcontrols button.close:hover { background-color: @destructive_color; color: @window_bg_color; }
+
+/* Botones del headerbar: planos por defecto (convencion GNOME), sin el
+   recuadro de borde que llevan los botones normales. border:none (no solo
+   border-color) para que gane sin importar donde caiga el shorthand
+   "border: 1px solid" generico en la cascada. Selectores repetidos con
+   "box.linked >" para cubrir el par atras/adelante con mas especificidad
+   que ".linked > button". */
+headerbar button, .titlebar button,
+headerbar box.linked > button, .titlebar box.linked > button,
+headerbar box.linked, .titlebar box.linked {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 4px 8px;
+  min-height: 16px;
+}
+headerbar button:hover, .titlebar button:hover,
+headerbar box.linked > button:hover, .titlebar box.linked > button:hover {
+  background-color: alpha(@window_fg_color, 0.1);
+  border: none;
+}
+headerbar button:active, headerbar button:checked,
+.titlebar button:active, .titlebar button:checked,
+headerbar box.linked > button:active, .titlebar box.linked > button:active {
+  background-color: alpha(@accent_color, 0.2);
+  border: none;
+}
+headerbar button.suggested-action, .titlebar button.suggested-action {
+  background-color: @accent_bg_color;
+  color: @accent_fg_color;
+  border: none;
+}
+headerbar button.suggested-action:hover, .titlebar button.suggested-action:hover {
+  background-color: shade(@accent_bg_color, 1.15);
+}
 
 /* ---- buttons ---- */
 button { background-color: @view_bg_color; color: @window_fg_color; border: 1px solid @borders; border-radius: 0; padding: 5px 16px; min-height: 24px; transition: background-color 150ms ease, border-color 150ms ease; }

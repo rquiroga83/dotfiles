@@ -7,6 +7,6 @@ Encoding=UTF-8
 [X-GNOME-Metatheme]
 GtkTheme=Arasaka-Red
 MetacityTheme=Arasaka-Red
-IconTheme=Adwaita
+IconTheme=Tela-circle-red-dark
 CursorTheme=default
 ButtonLayout=close,minimize,maximize:menu

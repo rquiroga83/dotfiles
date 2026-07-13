@@ -27,7 +27,7 @@
 @define-color yellow #fcee0a;
 @define-color yellow_dim #7a6e00;
 
-* { outline-color: alpha(@theme_selected_bg_color, 0.5); -gtk-icon-style: symbolic; }
+* { outline-color: alpha(@theme_selected_bg_color, 0.5); }
 
 window, .background { background-color: @theme_bg_color; color: @theme_fg_color; }
 window:backdrop { background-color: @theme_bg_color; color: @dim_label; }
