@@ -125,6 +125,7 @@ PKGS_PACMAN=(
     yazi
     ranger
     udiskie
+    nautilus
 
     # ls moderno
     lsd
@@ -193,6 +194,34 @@ link_config swaync
 link_config swayosd
 link_config lsd
 link_config ranger
+
+# ── Tema GTK Arasaka-Red ──────────────────────────────────────
+section "Tema GTK Arasaka-Red"
+
+mkdir -p "$HOME/.themes"
+if [ -d "$DOTFILES_DIR/gtk-theme/Arasaka-Red" ]; then
+    cp -r "$DOTFILES_DIR/gtk-theme/Arasaka-Red" "$HOME/.themes/"
+    success "~/.themes/Arasaka-Red"
+else
+    warn "Tema GTK no encontrado en dotfiles"
+fi
+
+# ── cmus ──────────────────────────────────────────────────────
+section "cmus (reproductor TUI)"
+
+mkdir -p "$HOME/.config/cmus/theme"
+if [ -f "$DOTFILES_DIR/cmus/theme/cyberpunk-red.theme" ]; then
+    cp "$DOTFILES_DIR/cmus/theme/cyberpunk-red.theme" "$HOME/.config/cmus/theme/"
+    success "~/.config/cmus/theme/cyberpunk-red.theme"
+fi
+if [ -f "$DOTFILES_DIR/cmus/rc" ]; then
+    if [ -f "$HOME/.config/cmus/rc" ] && ! diff -q "$DOTFILES_DIR/cmus/rc" "$HOME/.config/cmus/rc" &>/dev/null; then
+        cp "$HOME/.config/cmus/rc" "$HOME/.config/cmus/rc.bak"
+        info "Backup: ~/.config/cmus/rc → ~/.config/cmus/rc.bak"
+    fi
+    cp "$DOTFILES_DIR/cmus/rc" "$HOME/.config/cmus/"
+    success "~/.config/cmus/rc"
+fi
 
 # ── Scripts ejecutables ───────────────────────────────────────
 section "Permisos de scripts"

@@ -1,0 +1,5 @@
+// Copia este archivo como local.jsonc y adáptalo a tu equipo
+// Este archivo NO se sincroniza (está en .gitignore)
+{
+  "output": "eDP-1"
+}
