@@ -389,3 +389,16 @@ menuitem * {
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
+
+/* ── OpenVPN ──────────────────────────────────────── */
+#custom-openvpn {
+  padding: 0 8px;
+  min-width: 20px;
+  color: #555555;
+}
+#custom-openvpn.connected {
+  color: #00cfff;
+}
+#custom-openvpn.failed {
+  color: #ff003c;
+}

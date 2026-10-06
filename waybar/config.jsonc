@@ -22,7 +22,7 @@
   //"modules-center": ["cpu","temperature","memory","disk"],
   //"modules-right":["cava","bluetooth","network","backlight","pulseaudio","battery","clock","custom/power"],
   "modules-left": ["custom/launcher", "hyprland/workspaces", "wlr/taskbar", "mpris", "cava"],
-  "modules-center": ["privacy","custom/capslock","custom/udiskie"],
+  "modules-center": ["privacy","custom/capslock","custom/udiskie","custom/openvpn"],
   "modules-right":["cpu","temperature","bluetooth","network","backlight","pulseaudio","battery","custom/clock","custom/notification","custom/power"],
 
   // Modules Definition
@@ -310,5 +310,14 @@
         "return-type": "json",
         "interval": 2,
         "tooltip": true
+  },
+
+  // Indicador/toggle de OpenVPN
+  "custom/openvpn": {
+        "exec": "~/dotfiles/util/openvpn/waybar-openvpn.sh",
+        "return-type": "json",
+        "interval": 3,
+        "tooltip": true,
+        "on-click": "~/dotfiles/util/openvpn/openvpn-toggle.sh"
   }
 }
