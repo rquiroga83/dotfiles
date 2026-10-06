@@ -255,7 +255,7 @@
 		"device": "intel_backlight",
 		"tooltip": true,
 		"tooltip-format" : " Brightness: {0} %",
-		"format": "{1} {0}%",
+		"format": "{0}%",
 		"interval": 5,
         	"on-scroll-up": "brightnessctl set +5%",
 		"on-scroll-down": "brightnessctl set 5%-",
