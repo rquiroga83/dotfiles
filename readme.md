@@ -79,7 +79,8 @@ Regla de color: **rojo** = acción/crítico · **amarillo** = datos/estado · **
 ```
 dotfiles/
 ├── hypr/
-│   ├── hyprland.conf       # WM: layout, bordes, animaciones, atajos
+│   ├── hyprland.lua        # WM (Lua, Hyprland 0.57+): layout, bordes, animaciones, atajos
+│   ├── local.lua.example   # Plantilla de monitores/teclado (copiar a local.lua)
 │   ├── hyprpaper.conf      # Wallpaper
 │   ├── hypridle.conf       # Idle / bloqueo de pantalla
 │   └── scripts/            # Scripts para waybar y atajos

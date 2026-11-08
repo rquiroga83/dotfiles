@@ -1,0 +1,37 @@
+-- ============================================================
+-- Configuración local (dependiente del equipo)
+-- Copia este archivo como local.lua y adáptalo a tu equipo
+-- ============================================================
+
+
+-- ── Monitores ────────────────────────────────────────────────
+-- Ejemplos:
+--   hl.monitor({ output = "LVDS-1",   mode = "1366x768@60",  position = "0x0",    scale = 1 })
+--   hl.monitor({ output = "HDMI-A-1", mode = "1920x1080@60", position = "1366x0", scale = 1 })
+
+hl.monitor({ output = "", mode = "preferred", position = "auto", scale = "auto" })
+
+
+-- ── Teclado ──────────────────────────────────────────────────
+-- https://wiki.hypr.land/configuring/core/config-options/
+
+hl.config({
+    input = {
+        kb_layout  = "us",
+        kb_variant = "altgr-intl",
+        kb_model   = "",
+        kb_options = "",
+        kb_rules   = "",
+    },
+})
+
+
+-- ── Workspaces por monitor (opcional) ───────────────────────
+-- Ejemplo:
+--   hl.workspace_rule({ workspace = "1", monitor = "LVDS-1",   default = true })
+--   hl.workspace_rule({ workspace = "6", monitor = "HDMI-A-1", default = true })
+
+
+-- ── Dispositivos de entrada específicos (opcional) ──────────
+-- Ejemplo:
+--   hl.device({ name = "epic-mouse-v1", sensitivity = -0.5 })
